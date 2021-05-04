@@ -409,7 +409,7 @@ class GetAudioVK():
             self.download_refresh(my_id)
         except vk_api.exceptions.Captcha as captcha:
             captchawin.show()
-            self.urlCaptcha = captcha.get_url()  # Получить ссылку на изображение капчи
+            self.urlCaptcha = captcha.get_url()
             self.cphwin = captchawin.getUrl(self.urlCaptcha)
         except vk_api.exceptions.AuthError as auth:
             logwin.ui.errorLabel.setText("Username or Password is wrong!")
@@ -461,6 +461,11 @@ class GetAudioVK():
             self.msg_succes.setText("All songs was downloaded in " + str(round(self.timeFinal)) + " seconds.")
             self.msg_succes.show()
             self.msg_succes.raise_()
+            try:
+                # delete cookie file
+                os.remove("vk_config.v2.json")
+            except Exception as e:
+                pass
             window.readSongs()
         else:
             self.msg_error = QMessageBox()
