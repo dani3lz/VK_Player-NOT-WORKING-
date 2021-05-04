@@ -131,7 +131,7 @@ class Ui_SecondWindow(object):
         _translate = QtCore.QCoreApplication.translate
         SecondWindow.setWindowTitle(_translate("SecondWindow", "Authorization"))
         self.loginLabel.setText(_translate("SecondWindow", "Username"))
-        self.userEdit.setPlaceholderText(_translate("SecondWindow", "Your mobile (+373...)"))
+        self.userEdit.setPlaceholderText(_translate("SecondWindow", "Your mobile or e-mail"))
         self.passLabel.setText(_translate("SecondWindow", "Password"))
         self.passEdit.setPlaceholderText(_translate("SecondWindow", "Your password"))
         self.vkidLabel.setText(_translate("SecondWindow", "VK ID"))

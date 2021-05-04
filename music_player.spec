@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['music_player.py'],
-             pathex=['D:\\Files\\Qt\\Python'],
+             pathex=['D:\\Files\\Qt\\Python VK Player'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -31,4 +31,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='vk_icon.ico')
+          console=False , icon='icon.ico')

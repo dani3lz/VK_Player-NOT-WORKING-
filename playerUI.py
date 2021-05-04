@@ -129,7 +129,7 @@ class Ui_MainWindow(object):
         self.musicSlider.setOrientation(QtCore.Qt.Horizontal)
         self.musicSlider.setObjectName("musicSlider")
         self.infoLabel = QtWidgets.QLabel(self.centralwidget)
-        self.infoLabel.setGeometry(QtCore.QRect(310, 20, 711, 20))
+        self.infoLabel.setGeometry(QtCore.QRect(300, 20, 720, 20))
         font = QtGui.QFont()
         font.setPointSize(11)
         self.infoLabel.setFont(font)
