@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QMessageBox
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QIcon, QImage
 from playerUI import Ui_MainWindow
 from loginUI import Ui_SecondWindow
 import captchaUI
@@ -31,7 +31,7 @@ class PlayerWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setFixedSize(self.width(), self.height())
-        self.setWindowTitle("VK PLayer 1.0 by dani3lz")
+        self.setWindowTitle(name_window)
         self.setWindowIcon(QIcon('img/icon.ico'))
 
         # Setup music elements Nr.1
@@ -237,7 +237,7 @@ class PlayerWindow(QMainWindow):
         self.artists.clear()
         self.titles.clear()
         self.covers.clear()
-        self.setWindowTitle("VK Player by dani3lz")
+        self.setWindowTitle(name_window)
         self.player = QMediaPlayer()
         self.playlist = QMediaPlaylist(self.player)
         self.first = False
@@ -534,7 +534,7 @@ class LoginWindow(QMainWindow):
             if not my_id.isdecimal():
                 self.ui.errorLabel.setText("VK ID must contain only digits")
             else:
-                vkwin.auth_vk(login, password, my_id)
+                vkwin.auth_vk(login, password, my_id, None)
 
 
 # CAPTCHA WINDOW -------------------------------------------------------------------------------------------------------
@@ -552,20 +552,20 @@ class CaptchaWindow(QMainWindow):
         # Connect button
         self.ui.captchaButton.clicked.connect(self.verify)
 
-    # Download captcha image
-    def get_Image(self, url):
-        response = requests.get(str(url))
-        file = open("captcha.png", "wb")
-        file.write(response.content)
-        file.close()
-
     # Get captcha url
-    def getUrl(self, url):
-        self.get_Image(url)
-        self.captchurl = QPixmap("captcha.png")
-        self.w = self.ui.captchaImg.width()
-        self.h = self.ui.captchaImg.height()
-        self.ui.captchaImg.setPixmap(self.captchurl.scaled(self.w, self.h))
+    def getUrl(self, url, username, password, my_id):
+        try:
+            self.login = username
+            self.passw = password
+            self.id = my_id
+            img = requests.get(str(url)).content
+            self.img_data = QImage()
+            self.img_data.loadFromData(img)
+            self.w = self.ui.captchaImg.width()
+            self.h = self.ui.captchaImg.height()
+            self.ui.captchaImg.setPixmap(QPixmap(self.img_data))
+        except Exception as e:
+            print(e)
 
     # Send answer to VK API
     def verify(self):
@@ -578,27 +578,33 @@ class CaptchaWindow(QMainWindow):
             pass
         else:
             self.close()
-            vk_api.exceptions.Captcha.try_again(self.answer)
+            self.auth_vk(self.login, self.passw, self.id, self.answer)
 
 # VK API --------------------------------------------------------------------------------------------------------
 class GetAudioVK():
 
     # Get our session
-    def auth_vk(self, username, password, my_id):
+    def auth_vk(self, username, password, my_id, captcha):
         try:
-            print("F: AUTH")
             self.vk_session = vk_api.VkApi(login=username, password=password)
             self.vk_session.auth()
             self.vk = self.vk_session.get_api()
-            window.setWindowTitle("VK Player by dani3lz | Downloading...")
+            try:
+                os.remove("vk_config.v2.json")
+            except Exception as e:
+                pass
+            window.setWindowTitle( name_window + " | Downloading...")
             logwin.close()
             self.download_refresh(my_id)
 
         except vk_api.exceptions.Captcha as captcha:
+            cpwin.getUrl(captcha.get_url(), username, password, my_id)
             cpwin.show()
-            self.urlCaptcha = captcha.get_url()
-            cpwin.getUrl(self.urlCaptcha)
-            captcha.try_again()
+            if captcha is None:
+                pass
+            else:
+                captcha.try_again(captcha)
+
         except vk_api.exceptions.AuthError as auth:
             self.msg_auth = QMessageBox()
             self.msg_auth.setWindowTitle("Error")
@@ -613,7 +619,6 @@ class GetAudioVK():
         file.close()
 
     def download_refresh(self, my_id):
-        print("F: DOWNLOAD")
         vk_audio = audio.VkAudio(self.vk_session)
         time_start = time.time()
         self.songs_list = {}
@@ -656,10 +661,8 @@ class GetAudioVK():
         self.msg_succes.show()
         self.msg_succes.raise_()
         window.readSongs()
-        print("COMPLETED")
 
     def write_list(self, nr):
-        print("F: WRITE")
         id_song = nr
         try:
             title = self.list_audio[nr]["title"]
@@ -692,6 +695,7 @@ class GetAudioVK():
 if __name__ == "__main__":
     suppress_qt_warnings()
     app = QApplication([])
+    name_window = "VK Player 1.0 by dani3lz"
     logwin = LoginWindow()
     vkwin = GetAudioVK()
     cpwin = CaptchaWindow()
