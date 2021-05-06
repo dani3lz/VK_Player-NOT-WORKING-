@@ -44,6 +44,7 @@ class PlayerWindow(QMainWindow):
         self.repeatthis = False
         self.repeatonce = False
         self.mode = "Normal"
+        self.now_sec = 0
 
         # Read file with songs and settings
         self.readSongs()
@@ -121,7 +122,7 @@ class PlayerWindow(QMainWindow):
         self.msg = QMessageBox()
         self.msg.setWindowTitle("Advertisement")
         self.msg.setText("This function may take a long time, please don't close the application. "
-                    "It depends on  the number of songs in your playlist. "
+                    "It depends on the number of songs in your playlist and the speed of your internet. "
                     "Please insert your username, password and VK ID. Here you can get your ID: "
                     "<a href='https://regvk.com/id/'>https://regvk.com/id/</a>")
         self.msg.show()
@@ -197,8 +198,8 @@ class PlayerWindow(QMainWindow):
     def time_hit(self):
         if self.first:
             logwin.show()
-        if self.first and not logwin.isVisible():
-            self.close()
+        if self.first and not self.isVisible():
+            logwin.close()
             cpwin.close()
         if not self.isEnabled() and not logwin.isVisible():
             self.setEnabled(True)
@@ -221,11 +222,11 @@ class PlayerWindow(QMainWindow):
             else:
                 self.song_duration = "{0}:{1}".format(int(song_min), int(song_sec))
 
-            now_min, now_sec = self.convertMillis(int(self.ui.musicSlider.value()))
-            if now_sec < 10:
-                self.now_duration = "{0}:0{1}".format(int(now_min), int(now_sec))
+            now_min, self.now_sec = self.convertMillis(int(self.ui.musicSlider.value()))
+            if self.now_sec < 10:
+                self.now_duration = "{0}:0{1}".format(int(now_min), int(self.now_sec))
             else:
-                self.now_duration = "{0}:{1}".format(int(now_min), int(now_sec))
+                self.now_duration = "{0}:{1}".format(int(now_min), int(self.now_sec))
 
             self.ui.durationLabel.setText(str(self.now_duration) + " / " + str(self.song_duration))
 
@@ -312,9 +313,9 @@ class PlayerWindow(QMainWindow):
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Advertisement")
             self.msg.setText("This function may take a long time, please don't close the application. "
-                        "It depends on  the number of songs in your playlist. "
-                        "Please insert your username, password and VK ID. Here you can get your ID: "
-                        "<a href='https://regvk.com/id/'>https://regvk.com/id/</a>")
+                    "It depends on the number of songs in your playlist and the speed of your internet. "
+                    "Please insert your username, password and VK ID. Here you can get your ID: "
+                    "<a href='https://regvk.com/id/'>https://regvk.com/id/</a>")
             self.msg.show()
             self.msg.raise_()
 
@@ -349,8 +350,11 @@ class PlayerWindow(QMainWindow):
 
     # Previous button
     def prev(self):
-        self.playlist.previous()
-        self.newIndex = self.player.playlist().currentIndex()
+        if int(self.now_sec) < 10:
+            self.playlist.previous()
+            self.newIndex = self.player.playlist().currentIndex()
+        else:
+            self.player.setPosition(0)
         if not self.isPlaying:
             self.player.play()
             self.isPlaying = True
@@ -635,7 +639,7 @@ class LoginWindow(QMainWindow):
             else:
                 self.ui.userEdit.setText("")
                 self.ui.passEdit.setText("")
-                vkwin.auth_vk(login, password, my_id, None)
+                vkwin.auth_vk(login, password, my_id, None, None)
 
 
 # CAPTCHA WINDOW -------------------------------------------------------------------------------------------------------
@@ -646,19 +650,38 @@ class CaptchaWindow(QMainWindow):
         # Setup captcha window
         self.ui = captchaUI.Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setWindowTitle("Captcha")
         self.setFixedSize(self.width(), self.height())
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
+        self.cpEx = False
+        self.originalEdit = self.ui.captchaEdit.geometry()
+        self.originalButton = self.ui.captchaButton.geometry()
+        self.originalHeight = self.height()
 
         # Connect button
         self.ui.captchaButton.clicked.connect(self.verify)
 
+    # Type
+    def checkType(self, type, username, password, my_id):
+        if type == "captcha":
+            self.cpEx = True
+            self.setFixedSize(self.width(), self.originalHeight)
+            self.ui.captchaEdit.setGeometry(self.originalEdit)
+            self.ui.captchaButton.setGeometry(self.originalButton)
+            self.setWindowTitle("Captcha")
+        elif type == "two":
+            self.cpEx = False
+            self.setFixedSize(self.width(), 144)
+            self.ui.captchaEdit.setGeometry(40, 30, 271, 31)
+            self.ui.captchaButton.setGeometry(100, 80, 151, 41)
+            self.setWindowTitle("Two factor authentication")
+
+        self.login = username
+        self.passw = password
+        self.id = my_id
+
     # Get captcha url
-    def getUrl(self, url, username, password, my_id):
+    def getUrl(self, url):
         try:
-            self.login = username
-            self.passw = password
-            self.id = my_id
             img = requests.get(str(url)).content
             self.img_data = QImage()
             self.img_data.loadFromData(img)
@@ -670,20 +693,37 @@ class CaptchaWindow(QMainWindow):
 
     # Send answer to VK API
     def verify(self):
-        key = self.ui.captchaEdit.text()
-        vkwin.auth_vk(self.login, self.passw, self.id, key)
+        self.close()
+        if self.cpEx:
+            key = self.ui.captchaEdit.text()
+            vkwin.auth_vk(self.login, self.passw, self.id, key, None)
+        else:
+            key = self.ui.captchaEdit.text()
+            print("Here")
+            vkwin.auth_vk(self.login, self.passw, self.id, None, key)
 
 # VK API --------------------------------------------------------------------------------------------------------
 class GetAudioVK():
+    def auth_handler(self):
+        key = self.twoKey
+        remeber_device = False
+        return key, remeber_device
 
     # Get our session
-    def auth_vk(self, username, password, my_id, captchaKey):
+    def auth_vk(self, username, password, my_id, captchaKey, twoKey):
         try:
             if captchaKey is not None:
                 self.func.try_again(captchaKey)
-            self.vk_session = vk_api.VkApi(login=username, password=password)
-            self.vk_session.auth()
-            self.vk = self.vk_session.get_api()
+            if twoKey is not None:
+                self.twoKey = twoKey
+                self.vk_session = vk_api.VkApi(login=username, password=password, auth_handler=self.auth_handler)
+                self.vk_session.auth()
+                self.vk = self.vk_session.get_api()
+
+            else:
+                self.vk_session = vk_api.VkApi(login=username, password=password)
+                self.vk_session.auth()
+                self.vk = self.vk_session.get_api()
             try:
                 os.remove("vk_config.v2.json")
             except Exception as e:
@@ -693,15 +733,23 @@ class GetAudioVK():
             self.download_refresh(my_id)
 
         except vk_api.exceptions.Captcha as captcha:
-            cpwin.getUrl(captcha.get_url(), username, password, my_id)
+            cpwin.getUrl(captcha.get_url())
             self.func = captcha
+            cpwin.checkType("captcha", username, password, my_id)
             cpwin.show()
 
         except vk_api.exceptions.AuthError as auth:
-            logwin.show()
-            if cpwin.isVisible():
-                cpwin.close()
-            logwin.ui.errorLabel.setText("Username or Password is wrong!")
+            if str(auth) == "No handler for two-factor authentication":
+                cpwin.checkType("two", username, password, my_id)
+                if cpwin.isVisible():
+                    cpwin.close()
+                cpwin.show()
+            else:
+                print(auth)
+                logwin.show()
+                if cpwin.isVisible():
+                    cpwin.close()
+                logwin.ui.errorLabel.setText("Username or Password is wrong!")
 
     def get_Image(self, url, id_song):
         response = requests.get(str(url))
@@ -768,8 +816,11 @@ class GetAudioVK():
                 cover = "Undefined"
             else:
                 img = self.list_audio[nr]["track_covers"][1]
-                self.get_Image(img, str(nr))
-                cover = str(id_song) + ".jpg"
+                try:
+                    self.get_Image(img, str(nr))
+                    cover = str(id_song) + ".jpg"
+                except Exception as e:
+                    cover = "Undefined"
             url = self.list_audio[nr]["url"]
             self.songs_list["Songs"].append({
                         "id": id_song,
@@ -786,7 +837,7 @@ class GetAudioVK():
 if __name__ == "__main__":
     suppress_qt_warnings()
     app = QApplication([])
-    name_window = "VK Player 2.0 by dani3lz"
+    name_window = "VK Player 2.1 by dani3lz"
     logwin = LoginWindow()
     vkwin = GetAudioVK()
     cpwin = CaptchaWindow()
