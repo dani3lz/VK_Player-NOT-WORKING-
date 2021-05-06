@@ -20,193 +20,306 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
-        self.durationLabel = QtWidgets.QLabel(self.centralwidget)
-        self.durationLabel.setGeometry(QtCore.QRect(780, 52, 61, 21))
-        self.durationLabel.setStyleSheet("color: white;\n"
-"background: none;")
-        self.durationLabel.setObjectName("durationLabel")
         self.refreshButton = QtWidgets.QPushButton(self.centralwidget)
-        self.refreshButton.setGeometry(QtCore.QRect(960, 490, 81, 31))
-        self.refreshButton.setStyleSheet("QPushButton#refreshButton {\n"
-"background-color: #F52B2B;\n"
-"border: 2px solid #F52B2B;\n"
-"  color: white;\n"
-"  text-align: center;\n"
-"  text-decoration: none;\n"
-"  font-size: 15px;\n"
+        self.refreshButton.setGeometry(QtCore.QRect(10, 490, 81, 31))
+        self.refreshButton.setStyleSheet("QPushButton\n"
+"{\n"
+"    background-color: #ff3333;\n"
+"    color: #fff;\n"
+"    font-size: 11px;\n"
+"    font-weight: bold;\n"
+"    border: none;\n"
+"    border-radius: 25px;\n"
+"    padding: 5px;\n"
+"\n"
 "}\n"
 "\n"
-"QPushButton#refreshButton:hover{\n"
-"    background-color: #A31B1B;\n"
-"border: none;\n"
-"}")
+"\n"
+"QPushButton::disabled\n"
+"{\n"
+"    background-color: #5c5c5c;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::pressed\n"
+"{\n"
+"    background-color: #ff4747;\n"
+"\n"
+"}\n"
+"")
         self.refreshButton.setObjectName("refreshButton")
-        self.listWidget = QtWidgets.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(10, 130, 771, 381))
-        self.listWidget.setStyleSheet("background: none;")
-        self.listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.listWidget.setObjectName("listWidget")
-        self.volumeSlider = QtWidgets.QSlider(self.centralwidget)
-        self.volumeSlider.setGeometry(QtCore.QRect(870, 52, 140, 22))
-        self.volumeSlider.setStyleSheet("background: none;")
-        self.volumeSlider.setMaximum(100)
-        self.volumeSlider.setProperty("value", 50)
-        self.volumeSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.volumeSlider.setObjectName("volumeSlider")
-        self.volumeLabel = QtWidgets.QLabel(self.centralwidget)
-        self.volumeLabel.setGeometry(QtCore.QRect(910, 80, 101, 16))
+        self.titleLabel = QtWidgets.QLabel(self.centralwidget)
+        self.titleLabel.setGeometry(QtCore.QRect(270, 19, 501, 21))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.titleLabel.setFont(font)
+        self.titleLabel.setStyleSheet("background: none;\n"
+"color: white;")
+        self.titleLabel.setText("")
+        self.titleLabel.setObjectName("titleLabel")
+        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox.setGeometry(QtCore.QRect(-10, -10, 1071, 571))
+        self.groupBox.setStyleSheet("background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255))")
+        self.groupBox.setTitle("")
+        self.groupBox.setObjectName("groupBox")
+        self.prevButton = QtWidgets.QPushButton(self.groupBox)
+        self.prevButton.setGeometry(QtCore.QRect(175, 70, 31, 31))
+        self.prevButton.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/prev.png);\n"
+"background: none;\n"
+"border: none;\n"
+"background-repeat: none;")
+        self.prevButton.setText("")
+        self.prevButton.setObjectName("prevButton")
+        self.volumeLabel = QtWidgets.QLabel(self.groupBox)
+        self.volumeLabel.setGeometry(QtCore.QRect(905, 50, 101, 16))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.volumeLabel.setFont(font)
         self.volumeLabel.setStyleSheet("color: white;\n"
 "background: none;")
         self.volumeLabel.setObjectName("volumeLabel")
-        self.playButton = QtWidgets.QPushButton(self.centralwidget)
-        self.playButton.setGeometry(QtCore.QRect(100, 50, 101, 30))
+        self.durationLabel = QtWidgets.QLabel(self.groupBox)
+        self.durationLabel.setGeometry(QtCore.QRect(790, 74, 61, 21))
+        self.durationLabel.setStyleSheet("color: white;\n"
+"background: none;")
+        self.durationLabel.setObjectName("durationLabel")
+        self.playButton = QtWidgets.QPushButton(self.groupBox)
+        self.playButton.setGeometry(QtCore.QRect(85, 50, 71, 71))
         font = QtGui.QFont()
-        font.setPointSize(1)
         font.setBold(False)
         font.setItalic(False)
         font.setUnderline(False)
         font.setWeight(50)
         font.setStrikeOut(False)
         self.playButton.setFont(font)
-        self.playButton.setStyleSheet("QPushButton#playButton {\n"
-"background-color: #5181B8;\n"
-"border: 2px solid #5181B8;\n"
-"  color: white;\n"
-"font-size: 18px;\n"
-"width: 100%;\n"
-"height: 28px;\n"
-"    font:\"Bahnschrift\";\n"
-"}\n"
-"\n"
-"QPushButton#playButton:hover{\n"
-"    background-color: #2787F5;\n"
+        self.playButton.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/play.png);\n"
+"background: none;\n"
 "border: none;\n"
-"}")
+"background-repeat: none;")
+        self.playButton.setText("")
         self.playButton.setObjectName("playButton")
-        self.prevButton = QtWidgets.QPushButton(self.centralwidget)
-        self.prevButton.setGeometry(QtCore.QRect(20, 50, 71, 30))
-        self.prevButton.setStyleSheet("QPushButton#prevButton {\n"
-"background-color: #809FC2;\n"
-"  color: white;\n"
-"  border: 2px solid #809FC2;\n"
-"  height: 28px;\n"
-"width: 75%;\n"
-"  text-align: center;\n"
-"  text-decoration: none;\n"
-"  font-size: 20px;\n"
-"}\n"
-"\n"
-"QPushButton#prevButton:hover{\n"
-"    background-color: #5181B8;\n"
-"border:none;\n"
-"}")
-        self.prevButton.setObjectName("prevButton")
-        self.nextButton = QtWidgets.QPushButton(self.centralwidget)
-        self.nextButton.setGeometry(QtCore.QRect(210, 50, 71, 30))
-        self.nextButton.setStyleSheet("QPushButton#nextButton {\n"
-"background-color: #809FC2;\n"
-"  color: white;\n"
-"  border: 2px solid #809FC2;\n"
-"  height: 28px;\n"
-"width: 75%;\n"
-"  text-decoration: none;\n"
-"  font-size: 20px;\n"
-"}\n"
-"\n"
-"QPushButton#nextButton:hover{\n"
-"    background-color: #5181B8;\n"
-"border:none;\n"
-"}")
+        self.nextButton = QtWidgets.QPushButton(self.groupBox)
+        self.nextButton.setGeometry(QtCore.QRect(225, 70, 31, 31))
+        self.nextButton.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/next.png);\n"
+"background: none;\n"
+"border: none;\n"
+"background-repeat: none;")
+        self.nextButton.setText("")
         self.nextButton.setObjectName("nextButton")
-        self.musicSlider = QtWidgets.QSlider(self.centralwidget)
-        self.musicSlider.setGeometry(QtCore.QRect(290, 50, 481, 31))
+        self.volumeSlider = QtWidgets.QSlider(self.groupBox)
+        self.volumeSlider.setGeometry(QtCore.QRect(880, 74, 140, 22))
+        self.volumeSlider.setStyleSheet("QSlider{\n"
+"    background-color: transparent;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::groove:horizontal \n"
+"{\n"
+"    background-color: transparent;\n"
+"    height: 3px;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::sub-page:horizontal \n"
+"{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.494, x2:1, y2:0.5, stop:0 rgba(98, 9, 54, 255), stop:1 rgba(33, 13, 68, 255))\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::add-page:horizontal \n"
+"{\n"
+"    background-color: rgb(118, 118, 118);\n"
+"\n"
+"\n"
+";\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::handle:horizontal \n"
+"{\n"
+"    background-color: rgb(216, 216, 216);\n"
+"    width: 14px;\n"
+"    margin: -5px;\n"
+"    border-radius: 6px;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::handle:horizontal:hover \n"
+"{\n"
+"    background-color: rgb(240, 240, 240);\n"
+"\n"
+"}")
+        self.volumeSlider.setMinimum(0)
+        self.volumeSlider.setMaximum(100)
+        self.volumeSlider.setSingleStep(2)
+        self.volumeSlider.setPageStep(10)
+        self.volumeSlider.setProperty("value", 50)
+        self.volumeSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.volumeSlider.setTickPosition(QtWidgets.QSlider.NoTicks)
+        self.volumeSlider.setObjectName("volumeSlider")
+        self.musicSlider = QtWidgets.QSlider(self.groupBox)
+        self.musicSlider.setGeometry(QtCore.QRect(280, 70, 501, 31))
         self.musicSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.musicSlider.setStyleSheet("background: transparent;")
+        self.musicSlider.setStyleSheet("QSlider{\n"
+"    background-color: transparent;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::groove:horizontal \n"
+"{\n"
+"    background-color: transparent;\n"
+"    height: 3px;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::sub-page:horizontal \n"
+"{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.494, x2:1, y2:0.5, stop:0 rgba(98, 9, 54, 255), stop:1 rgba(33, 13, 68, 255))\n"
+"\n"
+"}\n"
+"\n"
+"QSlider::add-page:horizontal \n"
+"{\n"
+"    background-color: rgb(118, 118, 118);\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::handle:horizontal \n"
+"{\n"
+"    background-color: transparent;\n"
+"    width: 14px;\n"
+"    margin: -5px;\n"
+"    border-radius: 6px;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QSlider::handle:horizontal:hover \n"
+"{\n"
+"    background-color: rgb(240, 240, 240);\n"
+"\n"
+"}")
+        self.musicSlider.setMinimum(0)
         self.musicSlider.setOrientation(QtCore.Qt.Horizontal)
         self.musicSlider.setObjectName("musicSlider")
-        self.infoLabel = QtWidgets.QLabel(self.centralwidget)
-        self.infoLabel.setGeometry(QtCore.QRect(300, 20, 720, 20))
+        self.artistLabel = QtWidgets.QLabel(self.groupBox)
+        self.artistLabel.setGeometry(QtCore.QRect(280, 50, 491, 20))
         font = QtGui.QFont()
-        font.setPointSize(11)
-        self.infoLabel.setFont(font)
-        self.infoLabel.setStyleSheet("background: none;\n"
+        font.setPointSize(9)
+        self.artistLabel.setFont(font)
+        self.artistLabel.setStyleSheet("background: none;\n"
 "color: white;")
-        self.infoLabel.setText("")
-        self.infoLabel.setObjectName("infoLabel")
-        self.repeatOnce = QtWidgets.QPushButton(self.centralwidget)
-        self.repeatOnce.setGeometry(QtCore.QRect(790, 210, 249, 32))
-        self.repeatOnce.setStyleSheet("QPushButton#repeatOnce {\n"
+        self.artistLabel.setText("")
+        self.artistLabel.setObjectName("artistLabel")
+        self.groupBox_2 = QtWidgets.QGroupBox(self.groupBox)
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 1051, 141))
+        self.groupBox_2.setStyleSheet("border: none; background: rgb(24, 24 ,24);")
+        self.groupBox_2.setTitle("")
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.shuffleButton = QtWidgets.QPushButton(self.groupBox_2)
+        self.shuffleButton.setGeometry(QtCore.QRect(10, 40, 30, 20))
+        self.shuffleButton.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/shuffle.png);\n"
 "background: none;\n"
-"background-color: #4CAF50;\n"
-"  color: white;\n"
-"  border: 2px solid #4CAF50;\n"
-"  padding: 5px 15px;\n"
-"  text-align: center;\n"
-"  text-decoration: none;\n"
-"  font-size: 15px;\n"
-"}\n"
-"\n"
-"QPushButton#repeatOnce:hover{\n"
-"    background-color: #4CAF35;\n"
-"}")
-        self.repeatOnce.setObjectName("repeatOnce")
-        self.shuffleButton = QtWidgets.QPushButton(self.centralwidget)
-        self.shuffleButton.setGeometry(QtCore.QRect(790, 130, 249, 32))
-        self.shuffleButton.setStyleSheet("QPushButton#shuffleButton {\n"
-"background: none;\n"
-"background-color: #4CAF50;\n"
-"  color: white;\n"
-"  border: 2px solid #4CAF50;\n"
-"  padding: 5px 15px;\n"
-"  text-align: center;\n"
-"  text-decoration: none;\n"
-"  font-size: 15px;\n"
-"}\n"
-"\n"
-"QPushButton#shuffleButton:hover{\n"
-"    background-color: #4CAF35;\n"
-"}")
+"border: none;\n"
+"background-repeat: none;")
+        self.shuffleButton.setText("")
         self.shuffleButton.setObjectName("shuffleButton")
-        self.repeatThis = QtWidgets.QPushButton(self.centralwidget)
-        self.repeatThis.setGeometry(QtCore.QRect(790, 170, 249, 32))
-        self.repeatThis.setStyleSheet("QPushButton#repeatThis {\n"
+        self.repeatThis = QtWidgets.QPushButton(self.groupBox_2)
+        self.repeatThis.setGeometry(QtCore.QRect(10, 90, 30, 20))
+        self.repeatThis.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/repeatthis.png);\n"
 "background: none;\n"
-"background-color: #4CAF50;\n"
-"  color: white;\n"
-"  border: 2px solid #4CAF50;\n"
-"  padding: 5px 15px;\n"
-"  text-align: center;\n"
-"  text-decoration: none;\n"
-"  font-size: 15px;\n"
+"border: none;\n"
+"background-repeat: none;")
+        self.repeatThis.setText("")
+        self.repeatThis.setObjectName("repeatThis")
+        self.imgLabel = QtWidgets.QLabel(self.groupBox)
+        self.imgLabel.setGeometry(QtCore.QRect(60, 190, 150, 150))
+        self.imgLabel.setStyleSheet("background: transparent;\n"
+"")
+        self.imgLabel.setText("")
+        self.imgLabel.setObjectName("imgLabel")
+        self.groupBox_2.raise_()
+        self.prevButton.raise_()
+        self.volumeLabel.raise_()
+        self.durationLabel.raise_()
+        self.playButton.raise_()
+        self.nextButton.raise_()
+        self.volumeSlider.raise_()
+        self.musicSlider.raise_()
+        self.artistLabel.raise_()
+        self.imgLabel.raise_()
+        self.listWidget = QtWidgets.QListWidget(self.centralwidget)
+        self.listWidget.setGeometry(QtCore.QRect(250, 140, 801, 391))
+        self.listWidget.setStyleSheet("QListView\n"
+"{\n"
+"  background-color: transparent;\n"
+"  alternate-background-color: transparent;\n"
+"   border : none;\n"
+"   color: #fff;\n"
+"   font-size: 15px;\n"
+"   show-decoration-selected: 1;\n"
+"   outline: 0;\n"
+"       border: 0px solid #1d1d1d;\n"
+"}\n"
+"QListView::disabled\n"
+"{\n"
+"   background-color: transpent;\n"
+"    color: #1b1b1b;\n"
+"    border: none;\n"
+"}\n"
+"QListView::item\n"
+"{\n"
+"    background-color: transparent;\n"
+"    padding: 5px;\n"
+"}\n"
+"QListView::item:selected\n"
+"{\n"
+"   background-color: rgb(57, 57, 57);\n"
+"   border: 1px solid rgb(57, 57, 57);\n"
+"    color: #fff;\n"
+"}\n"
+"QListView::item:selected:!active\n"
+"{\n"
+"    background-color: #696969;\n"
+"    border: none;\n"
+"  color: #fff;\n"
 "}\n"
 "\n"
-"QPushButton#repeatThis:hover{\n"
-"    background-color: #4CAF35;\n"
+"QListView::item:selected:active \n"
+"{\n"
+"   background-color: rgb(57, 57, 57);\n"
+"    border: 1px solid rgb(57, 57, 57);\n"
+"   color: #fff;\n"
+"\n"
+"}\n"
+"\n"
+"QListView::item:hover {\n"
+"    background-color: #5e5e5e;\n"
+"   border: none;\n"
+"   color: #000;\n"
+"\n"
 "}")
-        self.repeatThis.setObjectName("repeatThis")
-        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(-10, -10, 1071, 571))
-        self.groupBox.setStyleSheet("background: qlineargradient(spread:pad, x1:0, y1:0.494, x2:1, y2:0.5, stop:0 rgba(28, 95, 66, 255), stop:1 rgba(17, 81, 118, 255))")
-        self.groupBox.setTitle("")
-        self.groupBox.setObjectName("groupBox")
+        self.listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.listWidget.setObjectName("listWidget")
         self.groupBox.raise_()
-        self.durationLabel.raise_()
         self.refreshButton.raise_()
+        self.titleLabel.raise_()
         self.listWidget.raise_()
-        self.volumeSlider.raise_()
-        self.volumeLabel.raise_()
-        self.playButton.raise_()
-        self.prevButton.raise_()
-        self.nextButton.raise_()
-        self.musicSlider.raise_()
-        self.infoLabel.raise_()
-        self.repeatOnce.raise_()
-        self.shuffleButton.raise_()
-        self.repeatThis.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -215,15 +328,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.durationLabel.setText(_translate("MainWindow", "0.00 / 0.00"))
         self.refreshButton.setText(_translate("MainWindow", "Refresh"))
         self.volumeLabel.setText(_translate("MainWindow", "Volume:"))
-        self.playButton.setText(_translate("MainWindow", "Play"))
-        self.prevButton.setText(_translate("MainWindow", "<<"))
-        self.nextButton.setText(_translate("MainWindow", ">>"))
-        self.repeatOnce.setText(_translate("MainWindow", "Repeat Once: Off"))
-        self.shuffleButton.setText(_translate("MainWindow", "Shuffle: Off"))
-        self.repeatThis.setText(_translate("MainWindow", "Repeat This: Off"))
+        self.durationLabel.setText(_translate("MainWindow", "0.00 / 0.00"))
 
 
 if __name__ == "__main__":
