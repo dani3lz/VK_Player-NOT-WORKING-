@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QMessageBox
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QImage
 from playerUI import Ui_MainWindow
-from loginUI import Ui_SecondWindow
+from loginUI import Ui_login
 import captchaUI
 from PyQt5.QtCore import QUrl, QTimer, Qt
 import vk_api
@@ -35,6 +35,7 @@ class PlayerWindow(QMainWindow):
         self.setWindowIcon(QIcon('img/icon.ico'))
 
         # Setup music elements Nr.1
+        self.first = True
         self.volume = 50
         self.titles = []
         self.artists = []
@@ -42,6 +43,7 @@ class PlayerWindow(QMainWindow):
         self.shuffle = False
         self.repeatthis = False
         self.repeatonce = False
+        self.mode = "Normal"
 
         # Read file with songs and settings
         self.readSongs()
@@ -66,10 +68,10 @@ class PlayerWindow(QMainWindow):
         except Exception as e:
             self.row = 0
 
-        # Volume and duration labels
+        # Volume and duration label
         self.player.setVolume(self.volume)
         self.ui.durationLabel.setText("0:00 / 0:00")
-        self.ui.volumeLabel.setText("Volume: " + str(self.volume))
+        self.lastVolume = self.volume
 
         # Connect buttons
         self.ui.playButton.clicked.connect(self.play)
@@ -78,11 +80,11 @@ class PlayerWindow(QMainWindow):
         self.ui.shuffleButton.clicked.connect(self.shuffleMode)
         self.ui.repeatThis.clicked.connect(self.repeatThisMode)
         self.ui.refreshButton.clicked.connect(self.refreshMode)
-
         self.ui.playButton.setIcon(QIcon("play.png"))
+        self.ui.volumeButton.clicked.connect(self.mute)
 
         # Music slider bar connect
-        self.ui.musicSlider.actionTriggered.connect(self.sliderValue)
+        self.ui.musicSlider.sliderReleased.connect(self.sliderValue)
         self.ui.listWidget.itemClicked.connect(self.changeSong)
 
         # Volume slider bar connect
@@ -93,6 +95,26 @@ class PlayerWindow(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.time_hit)
         self.timer.start(int(1000 / 60))
+
+        # Check mode
+        self.checkMode()
+
+
+    def mute(self):
+        if self.volume > 0:
+            self.lastVolume = self.volume
+            print(str(self.lastVolume))
+            self.volume = 0
+            self.ui.volumeSlider.setValue(0)
+            self.player.setVolume(0)
+        else:
+            if self.lastVolume > 0:
+                self.volume = self.lastVolume
+                self.ui.volumeSlider.setValue(self.volume)
+                self.player.setVolume(self.volume)
+            else:
+                self.ui.volumeSlider.setValue(75)
+                self.player.setVolume(75)
 
     # Refresh button
     def refreshMode(self):
@@ -117,7 +139,7 @@ class PlayerWindow(QMainWindow):
     def setVolume(self):
         self.volume = self.ui.volumeSlider.value()
         self.player.setVolume(self.volume)
-        self.ui.volumeLabel.setText("Volume: " + str(self.volume))
+
 
     # Change music using the list
     def changeSong(self):
@@ -134,10 +156,7 @@ class PlayerWindow(QMainWindow):
 
     # Music slider
     def sliderValue(self):
-        self.player.setVolume(0)
-        self.valueSlider = self.ui.musicSlider.value()
-        self.player.setPosition(self.valueSlider)
-        self.player.setVolume(self.volume)
+        self.player.setPosition(self.ui.musicSlider.value())
 
     # Read information about volume and row
     def settings_read(self):
@@ -146,11 +165,21 @@ class PlayerWindow(QMainWindow):
                 data = json.load(f)
             for i in data["Settings"]:
                 self.volume = i["Volume"]
+                self.lastVolume = self.volume
                 self.row = i["Row"]
-
+                self.mode = i["Mode"]
             self.currentIndex = self.row
         except Exception as e:
             pass
+
+    def checkMode(self):
+        if self.mode == "Shuffle":
+            self.shuffleMode()
+        elif self.mode == "Repeat This":
+            self.repeatThisMode()
+        elif self.mode == "Repeat Once":
+            self.repeatthis = True
+            self.repeatThisMode()
 
     # Write information about volume and row
     def settings_write(self):
@@ -158,13 +187,16 @@ class PlayerWindow(QMainWindow):
         settings_list["Settings"] = []
         settings_list["Settings"].append({
             "Volume": self.volume,
-            "Row": self.row
+            "Row": self.row,
+            "Mode": self.mode
         })
         with open("settings.json", "w", encoding="utf-8") as f:
             json.dump(settings_list, f, indent=4)
 
     # Timer
     def time_hit(self):
+        if self.first:
+            logwin.show()
         if self.first and not logwin.isVisible():
             self.close()
             cpwin.close()
@@ -172,9 +204,11 @@ class PlayerWindow(QMainWindow):
             self.setEnabled(True)
         self.checkStyle()
         self.setVolume()
+        self.checkstyleVolume()
         if self.isPlaying:
             self.ui.musicSlider.setMaximum(self.player.duration())
-            self.ui.musicSlider.setValue(self.player.position())
+            if not self.ui.musicSlider.isSliderDown():
+                self.ui.musicSlider.setValue(self.player.position())
             self.row = self.ui.listWidget.currentRow()
             self.ui.titleLabel.setText(self.titles[self.row])
             self.ui.artistLabel.setText(self.artists[self.row])
@@ -240,7 +274,6 @@ class PlayerWindow(QMainWindow):
         self.setWindowTitle(name_window)
         self.player = QMediaPlayer()
         self.playlist = QMediaPlaylist(self.player)
-        self.first = False
         try:
             with open("songs.json", "r", encoding="utf-8") as file:
                 data = json.load(file)
@@ -262,12 +295,20 @@ class PlayerWindow(QMainWindow):
                     self.covers.append(i["cover"])
             self.ui.titleLabel.setText(self.titles[0])
             self.ui.artistLabel.setText(self.artists[0])
+            self.currentIndex = 0
+            self.checkCover()
+            self.player.setPlaylist(self.playlist)
+            self.player.playlist().setCurrentIndex(0)
+            self.player.setVolume(self.volume)
+            if self.first:
+                self.ui.listWidget.setCurrentRow(0)
+                self.first = False
+
 
         except Exception as e:
             print(str(e))
-            self.setEnabled(False)
             self.first = True
-            logwin.show()
+            self.setEnabled(False)
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Advertisement")
             self.msg.setText("This function may take a long time, please don't close the application. "
@@ -277,9 +318,8 @@ class PlayerWindow(QMainWindow):
             self.msg.show()
             self.msg.raise_()
 
-        self.player.setPlaylist(self.playlist)
-        self.player.playlist().setCurrentIndex(0)
-        self.player.setVolume(self.volume)
+
+
 
     # Play button
     def play(self):
@@ -327,30 +367,35 @@ class PlayerWindow(QMainWindow):
             self.repeatthis = True
             self.shuffle = False
             self.repeatonce = False
+            self.mode = "Repeat This"
             self.checkstylebuttons()
         elif self.repeatthis:
             self.playlist.setPlaybackMode(0)
             self.repeatthis = False
             self.shuffle = False
             self.repeatonce = True
+            self.mode = "Repeat Once"
             self.checkstylebuttons()
         else:
             self.playlist.setPlaybackMode(3)
             self.repeatonce = False
+            self.mode = "Normal"
             self.checkstylebuttons()
 
     # Shuffle button
     def shuffleMode(self):
         if not self.shuffle:
             self.playlist.setPlaybackMode(4)
+            print("Here")
             self.shuffle = True
             self.repeatonce = False
             self.repeatthis = False
+            self.mode = "Shuffle"
             self.checkstylebuttons()
-
         else:
             self.playlist.setPlaybackMode(3)
             self.shuffle = False
+            self.mode = "Normal"
             self.checkstylebuttons()
 
     def checkstylebuttons(self):
@@ -497,6 +542,59 @@ class PlayerWindow(QMainWindow):
                                              "border: none;\n"
                                              "background-repeat: none;")
 
+    def checkstyleVolume(self):
+        if self.ui.volumeButton.underMouse():
+            if self.ui.volumeSlider.value() == 0:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/mute_focus.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 0 and self.ui.volumeSlider.value() <= 30:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/low_focus.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 30 and self.ui.volumeSlider.value() <= 70:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/medium_focus.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 70:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/max_focus.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+
+        else:
+            if self.ui.volumeSlider.value() == 0:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                            "border-image: url(img/mute.png);\n"
+                                            "background: none;\n"
+                                            "border: none;\n"
+                                            "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 0 and self.ui.volumeSlider.value() <= 30:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/low.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 30 and self.ui.volumeSlider.value() <= 70:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/medium.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+            elif self.ui.volumeSlider.value() > 70:
+                self.ui.volumeButton.setStyleSheet("background-color: transparent;\n"
+                                                "border-image: url(img/max.png);\n"
+                                                "background: none;\n"
+                                                "border: none;\n"
+                                                "background-repeat: none;")
+
 
 # LOGIN WINDOW ---------------------------------------------------------------------------------------------------------
 class LoginWindow(QMainWindow):
@@ -504,8 +602,9 @@ class LoginWindow(QMainWindow):
         super(LoginWindow, self).__init__()
 
         # Setup login window
-        self.ui = Ui_SecondWindow()
+        self.ui = Ui_login()
         self.ui.setupUi(self)
+        self.setWindowTitle("Login")
         self.setWindowIcon(QIcon('img/login_icon.ico'))
         self.ui.passEdit.setEchoMode(QLineEdit.Password)
         self.setFixedSize(self.width(), self.height())
@@ -534,6 +633,8 @@ class LoginWindow(QMainWindow):
             if not my_id.isdecimal():
                 self.ui.errorLabel.setText("VK ID must contain only digits")
             else:
+                self.ui.userEdit.setText("")
+                self.ui.passEdit.setText("")
                 vkwin.auth_vk(login, password, my_id, None)
 
 
@@ -563,29 +664,23 @@ class CaptchaWindow(QMainWindow):
             self.img_data.loadFromData(img)
             self.w = self.ui.captchaImg.width()
             self.h = self.ui.captchaImg.height()
-            self.ui.captchaImg.setPixmap(QPixmap(self.img_data))
+            self.ui.captchaImg.setPixmap(QPixmap(self.img_data).scaled(self.w, self.h))
         except Exception as e:
             print(e)
 
     # Send answer to VK API
     def verify(self):
-        self.answer = self.ui.captchaEdit.text()
-        try:
-            os.remove("captcha.png")
-        except Exception as e:
-            pass
-        if self.answer == "":
-            pass
-        else:
-            self.close()
-            self.auth_vk(self.login, self.passw, self.id, self.answer)
+        key = self.ui.captchaEdit.text()
+        vkwin.auth_vk(self.login, self.passw, self.id, key)
 
 # VK API --------------------------------------------------------------------------------------------------------
 class GetAudioVK():
 
     # Get our session
-    def auth_vk(self, username, password, my_id, captcha):
+    def auth_vk(self, username, password, my_id, captchaKey):
         try:
+            if captchaKey is not None:
+                self.func.try_again(captchaKey)
             self.vk_session = vk_api.VkApi(login=username, password=password)
             self.vk_session.auth()
             self.vk = self.vk_session.get_api()
@@ -599,18 +694,14 @@ class GetAudioVK():
 
         except vk_api.exceptions.Captcha as captcha:
             cpwin.getUrl(captcha.get_url(), username, password, my_id)
+            self.func = captcha
             cpwin.show()
-            if captcha is None:
-                pass
-            else:
-                captcha.try_again(captcha)
 
         except vk_api.exceptions.AuthError as auth:
-            self.msg_auth = QMessageBox()
-            self.msg_auth.setWindowTitle("Error")
-            self.msg_auth.setText("Username or Password is wrong!")
-            self.msg_auth.show()
-            self.msg_auth.raise_()
+            logwin.show()
+            if cpwin.isVisible():
+                cpwin.close()
+            logwin.ui.errorLabel.setText("Username or Password is wrong!")
 
     def get_Image(self, url, id_song):
         response = requests.get(str(url))
@@ -695,7 +786,7 @@ class GetAudioVK():
 if __name__ == "__main__":
     suppress_qt_warnings()
     app = QApplication([])
-    name_window = "VK Player 1.0 by dani3lz"
+    name_window = "VK Player 2.0 by dani3lz"
     logwin = LoginWindow()
     vkwin = GetAudioVK()
     cpwin = CaptchaWindow()

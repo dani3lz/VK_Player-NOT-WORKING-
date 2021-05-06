@@ -14,33 +14,80 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(605, 355)
+        MainWindow.resize(360, 303)
+        MainWindow.setStyleSheet("QWidget\n"
+"{\n"
+"    background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255));\n"
+"    color: #000000;\n"
+"}\n"
+"")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.captchaImg = QtWidgets.QLabel(self.centralwidget)
-        self.captchaImg.setGeometry(QtCore.QRect(120, 30, 371, 131))
+        self.captchaImg.setGeometry(QtCore.QRect(50, 30, 251, 101))
+        self.captchaImg.setStyleSheet("background: none;\n"
+"border: none;\n"
+"background-repeat: none;\n"
+"background-color: transparent;")
         self.captchaImg.setText("")
         self.captchaImg.setObjectName("captchaImg")
         self.captchaEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.captchaEdit.setGeometry(QtCore.QRect(140, 210, 321, 41))
+        self.captchaEdit.setGeometry(QtCore.QRect(40, 170, 271, 31))
         font = QtGui.QFont()
-        font.setPointSize(15)
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
         self.captchaEdit.setFont(font)
+        self.captchaEdit.setStyleSheet("QLineEdit{\n"
+"    background-color: transparent;\n"
+"    color: #b9b9bb;\n"
+"    font-weight: bold;\n"
+"    border-style: solid;\n"
+"    border-width: 2px;\n"
+"    border-top: 0px;\n"
+"    border-left: 0px;\n"
+"    border-right: 0px;\n"
+"    border-color: #b9b9bb;\n"
+"    padding-left: 10px;\n"
+"    padding-right: 10px;\n"
+"    padding-bottom: 10px;\n"
+"\n"
+"}")
+        self.captchaEdit.setText("")
         self.captchaEdit.setObjectName("captchaEdit")
         self.captchaButton = QtWidgets.QPushButton(self.centralwidget)
-        self.captchaButton.setGeometry(QtCore.QRect(230, 270, 151, 41))
+        self.captchaButton.setGeometry(QtCore.QRect(100, 220, 151, 41))
         font = QtGui.QFont()
         font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
         self.captchaButton.setFont(font)
+        self.captchaButton.setStyleSheet("QPushButton\n"
+"{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.494, x2:1, y2:0.5, stop:0 rgba(98, 9, 54, 180), stop:1 rgba(33, 13, 68, 180));\n"
+"    color: #cdcdcd;\n"
+"    font-weight: bold;\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-radius: 17px;\n"
+"    border-color: transparent;\n"
+"    padding: 10px;\n"
+"}\n"
+"\n"
+"QPushButton::hover\n"
+"{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.494, x2:1, y2:0.5, stop:0 rgba(98, 9, 54, 255), stop:1 rgba(33, 13, 68, 255));\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::pressed\n"
+"{\n"
+"    background-color: #202020;\n"
+"    color: #fff;\n"
+"}")
         self.captchaButton.setObjectName("captchaButton")
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 605, 21))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

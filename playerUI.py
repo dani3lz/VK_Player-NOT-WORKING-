@@ -14,41 +14,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1051, 531)
-        MainWindow.setFocusPolicy(QtCore.Qt.WheelFocus)
+        MainWindow.resize(1051, 625)
+        MainWindow.setFocusPolicy(QtCore.Qt.NoFocus)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
-        self.refreshButton = QtWidgets.QPushButton(self.centralwidget)
-        self.refreshButton.setGeometry(QtCore.QRect(10, 490, 81, 31))
-        self.refreshButton.setStyleSheet("QPushButton\n"
-"{\n"
-"    background-color: #ff3333;\n"
-"    color: #fff;\n"
-"    font-size: 11px;\n"
-"    font-weight: bold;\n"
-"    border: none;\n"
-"    border-radius: 25px;\n"
-"    padding: 5px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QPushButton::disabled\n"
-"{\n"
-"    background-color: #5c5c5c;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QPushButton::pressed\n"
-"{\n"
-"    background-color: #ff4747;\n"
-"\n"
-"}\n"
-"")
-        self.refreshButton.setObjectName("refreshButton")
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
         self.titleLabel.setGeometry(QtCore.QRect(270, 19, 501, 21))
         font = QtGui.QFont()
@@ -59,8 +30,9 @@ class Ui_MainWindow(object):
         self.titleLabel.setText("")
         self.titleLabel.setObjectName("titleLabel")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(-10, -10, 1071, 571))
-        self.groupBox.setStyleSheet("background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255))")
+        self.groupBox.setGeometry(QtCore.QRect(-10, -10, 1071, 641))
+        self.groupBox.setStyleSheet("background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255));\n"
+"border: none;")
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.prevButton = QtWidgets.QPushButton(self.groupBox)
@@ -72,14 +44,6 @@ class Ui_MainWindow(object):
 "background-repeat: none;")
         self.prevButton.setText("")
         self.prevButton.setObjectName("prevButton")
-        self.volumeLabel = QtWidgets.QLabel(self.groupBox)
-        self.volumeLabel.setGeometry(QtCore.QRect(905, 50, 101, 16))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.volumeLabel.setFont(font)
-        self.volumeLabel.setStyleSheet("color: white;\n"
-"background: none;")
-        self.volumeLabel.setObjectName("volumeLabel")
         self.durationLabel = QtWidgets.QLabel(self.groupBox)
         self.durationLabel.setGeometry(QtCore.QRect(790, 74, 61, 21))
         self.durationLabel.setStyleSheet("color: white;\n"
@@ -111,7 +75,7 @@ class Ui_MainWindow(object):
         self.nextButton.setText("")
         self.nextButton.setObjectName("nextButton")
         self.volumeSlider = QtWidgets.QSlider(self.groupBox)
-        self.volumeSlider.setGeometry(QtCore.QRect(880, 74, 140, 22))
+        self.volumeSlider.setGeometry(QtCore.QRect(899, 74, 131, 22))
         self.volumeSlider.setStyleSheet("QSlider{\n"
 "    background-color: transparent;\n"
 "\n"
@@ -246,15 +210,52 @@ class Ui_MainWindow(object):
 "background-repeat: none;")
         self.repeatThis.setText("")
         self.repeatThis.setObjectName("repeatThis")
+        self.volumeButton = QtWidgets.QPushButton(self.groupBox_2)
+        self.volumeButton.setGeometry(QtCore.QRect(860, 66, 20, 18))
+        self.volumeButton.setStyleSheet("background-color: transparent;\n"
+"border-image: url(img/medium.png);\n"
+"background: none;\n"
+"border: none;\n"
+"background-repeat: none;")
+        self.volumeButton.setText("")
+        self.volumeButton.setObjectName("volumeButton")
         self.imgLabel = QtWidgets.QLabel(self.groupBox)
         self.imgLabel.setGeometry(QtCore.QRect(60, 190, 150, 150))
         self.imgLabel.setStyleSheet("background: transparent;\n"
 "")
         self.imgLabel.setText("")
         self.imgLabel.setObjectName("imgLabel")
+        self.refreshButton = QtWidgets.QPushButton(self.groupBox)
+        self.refreshButton.setGeometry(QtCore.QRect(20, 595, 81, 31))
+        self.refreshButton.setStyleSheet("QPushButton\n"
+"{\n"
+"    background-color: #ff3333;\n"
+"    color: #fff;\n"
+"    font-size: 11px;\n"
+"    font-weight: bold;\n"
+"    border: none;\n"
+"    border-radius: 25px;\n"
+"    padding: 5px;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::disabled\n"
+"{\n"
+"    background-color: #5c5c5c;\n"
+"\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::pressed\n"
+"{\n"
+"    background-color: #ff4747;\n"
+"\n"
+"}\n"
+"")
+        self.refreshButton.setObjectName("refreshButton")
         self.groupBox_2.raise_()
         self.prevButton.raise_()
-        self.volumeLabel.raise_()
         self.durationLabel.raise_()
         self.playButton.raise_()
         self.nextButton.raise_()
@@ -262,8 +263,9 @@ class Ui_MainWindow(object):
         self.musicSlider.raise_()
         self.artistLabel.raise_()
         self.imgLabel.raise_()
+        self.refreshButton.raise_()
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(250, 140, 801, 391))
+        self.listWidget.setGeometry(QtCore.QRect(250, 140, 801, 485))
         self.listWidget.setStyleSheet("QListView\n"
 "{\n"
 "  background-color: transparent;\n"
@@ -317,7 +319,6 @@ class Ui_MainWindow(object):
         self.listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.listWidget.setObjectName("listWidget")
         self.groupBox.raise_()
-        self.refreshButton.raise_()
         self.titleLabel.raise_()
         self.listWidget.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
@@ -328,9 +329,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.refreshButton.setText(_translate("MainWindow", "Refresh"))
-        self.volumeLabel.setText(_translate("MainWindow", "Volume:"))
         self.durationLabel.setText(_translate("MainWindow", "0.00 / 0.00"))
+        self.refreshButton.setText(_translate("MainWindow", "Refresh"))
 
 
 if __name__ == "__main__":
