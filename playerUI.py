@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
         self.artistLabel.setText("")
         self.artistLabel.setObjectName("artistLabel")
         self.groupBox_2 = QtWidgets.QGroupBox(self.groupBox)
-        self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 1051, 141))
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 1051, 140))
         self.groupBox_2.setStyleSheet("border: none; background: rgb(24, 24 ,24);")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
