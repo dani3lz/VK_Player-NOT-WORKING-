@@ -3,7 +3,8 @@
         {
             "Volume": 50,
             "Row": 0,
-            "Mode": "Normal"
+            "Mode": "Normal",
+            "Offline": 0
         }
     ]
 }
