@@ -192,6 +192,7 @@ class PlayerWindow(QMainWindow):
             elif self.mode == "Repeat Once":
                 self.playlist.setPlaybackMode(0)
             else:
+                self.mode = "Normal"
                 self.playlist.setPlaybackMode(3)
         except Exception as e:
             print(e)
@@ -355,7 +356,7 @@ class PlayerWindow(QMainWindow):
                     self.offline_mode = False
             self.currentIndex = self.row
         except Exception as e:
-            pass
+            print(e)
 
     def checkMode(self):
         if self.mode == "Shuffle":
@@ -510,6 +511,7 @@ class PlayerWindow(QMainWindow):
                 elif self.mode == "Repeat Once":
                     self.playlist.setPlaybackMode(0)
                 else:
+                    self.mode = "Normal"
                     self.playlist.setPlaybackMode(3)
             else:
                 self.ui.titleLabel.setText(self.titles[0])

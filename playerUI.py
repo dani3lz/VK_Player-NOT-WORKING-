@@ -354,9 +354,9 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QListView::item:hover {\n"
-"    background-color: #5e5e5e;\n"
+"    background-color: transparent;\n"
 "   border: none;\n"
-"   color: #000;\n"
+"   color: #1DB954;\n"
 "\n"
 "}")
         self.listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
