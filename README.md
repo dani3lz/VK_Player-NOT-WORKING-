@@ -26,7 +26,7 @@ It also has a list of all the songs from your VK profile and also if the song ha
 
 Example 1 | Example 2
 :-------------------------:|:-------------------------:
-![Online Mode](https://i.imgur.com/Mp5sPl5.png) | ![Offline Mode](https://i.imgur.com/OdEZ2C4.png)
+![Offline Mode](https://i.imgur.com/6ftddBx.png) | ![Online Mode](https://i.imgur.com/2ykmsg4.png)
 
 ## Login
 Logging on to VK.com is also done in **VK Player**. The user must enter the login, password and VK ID (VK ID must contain only digits). If the user has two factor authentication, then a new window will appear where you will have to enter the code. 
