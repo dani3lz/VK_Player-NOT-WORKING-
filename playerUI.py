@@ -14,14 +14,96 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1051, 625)
+        MainWindow.resize(1051, 655)
         MainWindow.setFocusPolicy(QtCore.Qt.NoFocus)
         MainWindow.setStyleSheet("")
+        MainWindow.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
+
+        self.titleBarLabel = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarLabel.setGeometry(QtCore.QRect(0, 0, 963, 30))
+        font = QtGui.QFont("Impact")
+        font.setPointSize(13)
+        self.titleBarLabel.setFont(font)
+        self.titleBarLabel.setStyleSheet("background: #181818;\n"
+                                      "color: #CDCDCD;")
+        self.titleBarLabel.setText("\t\t\t\t\t\t\t\t\tVK Player")
+        self.titleBarLabel.setObjectName("titleBarLabel")
+
+        self.titleBarInfoLabel = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarInfoLabel.setGeometry(QtCore.QRect(20, 0, 963, 30))
+        font = QtGui.QFont("Courier")
+        font.setPointSize(13)
+        self.titleBarInfoLabel.setFont(font)
+        self.titleBarInfoLabel.setStyleSheet("background: transparent;\n"
+                                         "color: #CDCDCD;")
+        self.titleBarInfoLabel.setText("")
+        self.titleBarInfoLabel.setObjectName("titleBarInfoLabel")
+
+        self.closeButton = QtWidgets.QPushButton(MainWindow)
+        self.closeButton.setGeometry(QtCore.QRect(1007, 0, 44, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.closeButton.setFont(font)
+        self.closeButton.setStyleSheet("QPushButton\n"
+"{\n"
+"    background: #1B1B1B;\n"
+"    color: #cdcdcd;\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-color: transparent;\n"
+"}\n"
+"\n"
+"QPushButton::hover\n"
+"{\n"
+"    background-color: #E81123;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::pressed\n"
+"{\n"
+"    background-color: #7D0913;\n"
+"    color: #fff;\n"
+"}")
+        self.closeButton.setObjectName("closeButton")
+
+
+
+        self.minimizeButton = QtWidgets.QPushButton(MainWindow)
+        self.minimizeButton.setGeometry(QtCore.QRect(963, 0, 44, 30))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.minimizeButton.setFont(font)
+        self.minimizeButton.setStyleSheet("QPushButton\n"
+"{\n"
+"    background: #1B1B1B;\n"
+"    color: #cdcdcd;\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-color: transparent;\n"
+"    padding-bottom: 12px;\n"
+"}\n"
+"\n"
+"QPushButton::hover\n"
+"{\n"
+"    background-color: #202020;\n"
+"    color: #fff;\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton::pressed\n"
+"{\n"
+"    background-color: #4A4A4A;\n"
+"    color: #fff;\n"
+"}")
+        self.minimizeButton.setObjectName("minimizeButton")
+
+
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
-        self.titleLabel.setGeometry(QtCore.QRect(270, 19, 501, 21))
+        self.titleLabel.setGeometry(QtCore.QRect(270, 49, 501, 21))
         font = QtGui.QFont()
         font.setPointSize(13)
         self.titleLabel.setFont(font)
@@ -30,13 +112,13 @@ class Ui_MainWindow(object):
         self.titleLabel.setText("")
         self.titleLabel.setObjectName("titleLabel")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(-10, -10, 1071, 641))
+        self.groupBox.setGeometry(QtCore.QRect(-10, 30, 1071, 641))
         self.groupBox.setStyleSheet("background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255));\n"
 "border: none;")
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.prevButton = QtWidgets.QPushButton(self.groupBox)
-        self.prevButton.setGeometry(QtCore.QRect(175, 70, 31, 31))
+        self.prevButton.setGeometry(QtCore.QRect(175, 60, 31, 31))
         self.prevButton.setStyleSheet("background-color: transparent;\n"
 "border-image: url(img/prev.png);\n"
 "background: none;\n"
@@ -45,12 +127,12 @@ class Ui_MainWindow(object):
         self.prevButton.setText("")
         self.prevButton.setObjectName("prevButton")
         self.durationLabel = QtWidgets.QLabel(self.groupBox)
-        self.durationLabel.setGeometry(QtCore.QRect(790, 74, 61, 21))
+        self.durationLabel.setGeometry(QtCore.QRect(790, 64, 61, 21))
         self.durationLabel.setStyleSheet("color: white;\n"
 "background: none;")
         self.durationLabel.setObjectName("durationLabel")
         self.playButton = QtWidgets.QPushButton(self.groupBox)
-        self.playButton.setGeometry(QtCore.QRect(85, 50, 71, 71))
+        self.playButton.setGeometry(QtCore.QRect(85, 40, 71, 71))
         font = QtGui.QFont()
         font.setBold(False)
         font.setItalic(False)
@@ -66,7 +148,7 @@ class Ui_MainWindow(object):
         self.playButton.setText("")
         self.playButton.setObjectName("playButton")
         self.nextButton = QtWidgets.QPushButton(self.groupBox)
-        self.nextButton.setGeometry(QtCore.QRect(225, 70, 31, 31))
+        self.nextButton.setGeometry(QtCore.QRect(225, 60, 31, 31))
         self.nextButton.setStyleSheet("background-color: transparent;\n"
 "border-image: url(img/next.png);\n"
 "background: none;\n"
@@ -75,7 +157,7 @@ class Ui_MainWindow(object):
         self.nextButton.setText("")
         self.nextButton.setObjectName("nextButton")
         self.volumeSlider = QtWidgets.QSlider(self.groupBox)
-        self.volumeSlider.setGeometry(QtCore.QRect(899, 74, 131, 22))
+        self.volumeSlider.setGeometry(QtCore.QRect(899, 64, 131, 22))
         self.volumeSlider.setStyleSheet("QSlider{\n"
 "    background-color: transparent;\n"
 "\n"
@@ -131,7 +213,7 @@ class Ui_MainWindow(object):
         self.volumeSlider.setTickPosition(QtWidgets.QSlider.NoTicks)
         self.volumeSlider.setObjectName("volumeSlider")
         self.musicSlider = QtWidgets.QSlider(self.groupBox)
-        self.musicSlider.setGeometry(QtCore.QRect(280, 70, 501, 31))
+        self.musicSlider.setGeometry(QtCore.QRect(280, 60, 501, 31))
         self.musicSlider.setFocusPolicy(QtCore.Qt.NoFocus)
         self.musicSlider.setStyleSheet("QSlider{\n"
 "    background-color: transparent;\n"
@@ -179,7 +261,7 @@ class Ui_MainWindow(object):
         self.musicSlider.setOrientation(QtCore.Qt.Horizontal)
         self.musicSlider.setObjectName("musicSlider")
         self.artistLabel = QtWidgets.QLabel(self.groupBox)
-        self.artistLabel.setGeometry(QtCore.QRect(280, 50, 491, 20))
+        self.artistLabel.setGeometry(QtCore.QRect(280, 40, 491, 20))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.artistLabel.setFont(font)
@@ -188,7 +270,7 @@ class Ui_MainWindow(object):
         self.artistLabel.setText("")
         self.artistLabel.setObjectName("artistLabel")
         self.groupBox_2 = QtWidgets.QGroupBox(self.groupBox)
-        self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 1051, 140))
+        self.groupBox_2.setGeometry(QtCore.QRect(10, 0, 1051, 140))
         self.groupBox_2.setStyleSheet("border: none; background: rgb(24, 24 ,24);")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
@@ -220,13 +302,13 @@ class Ui_MainWindow(object):
         self.volumeButton.setText("")
         self.volumeButton.setObjectName("volumeButton")
         self.imgLabel = QtWidgets.QLabel(self.groupBox)
-        self.imgLabel.setGeometry(QtCore.QRect(60, 190, 150, 150))
+        self.imgLabel.setGeometry(QtCore.QRect(60, 180, 150, 150))
         self.imgLabel.setStyleSheet("background: transparent;\n"
 "")
         self.imgLabel.setText("")
         self.imgLabel.setObjectName("imgLabel")
         self.refreshButton = QtWidgets.QPushButton(self.groupBox)
-        self.refreshButton.setGeometry(QtCore.QRect(20, 595, 74, 31))
+        self.refreshButton.setGeometry(QtCore.QRect(20, 585, 74, 31))
         self.refreshButton.setStyleSheet("QPushButton\n"
 "{\n"
 "    background-color: #ff3333;\n"
@@ -258,7 +340,7 @@ class Ui_MainWindow(object):
 #-----------------------
 
         self.offlineButton = QtWidgets.QPushButton(self.groupBox)
-        self.offlineButton.setGeometry(QtCore.QRect(112, 370, 43, 31))
+        self.offlineButton.setGeometry(QtCore.QRect(112, 360, 43, 31))
         self.offlineButton.setStyleSheet("background-color: transparent;\n"
                                          "border-image: url(img/offline_off.png);\n"
                                          "background: none;\n"
@@ -267,8 +349,8 @@ class Ui_MainWindow(object):
         self.offlineButton.setText("")
         self.offlineButton.setObjectName("offlineButton")
 
-        self.aboutButton = QtWidgets.QPushButton(self.groupBox_2)
-        self.aboutButton.setGeometry(QtCore.QRect(1025, 6, 20, 20))
+        self.aboutButton = QtWidgets.QPushButton(self.groupBox)
+        self.aboutButton.setGeometry(QtCore.QRect(105, 591, 20, 20))
         self.aboutButton.setStyleSheet("background-color: transparent;\n"
                                          "border-image: url(img/about.png);\n"
                                          "background: none;\n"
@@ -286,10 +368,14 @@ class Ui_MainWindow(object):
         self.musicSlider.raise_()
         self.artistLabel.raise_()
         self.imgLabel.raise_()
+        self.titleBarLabel.raise_()
+        self.titleBarInfoLabel.raise_()
         self.refreshButton.raise_()
+        self.closeButton.raise_()
+        self.minimizeButton.raise_()
         self.offlineButton.raise_()
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(250, 140, 801, 485))
+        self.listWidget.setGeometry(QtCore.QRect(250, 170, 801, 485))
         self.listWidget.setStyleSheet("QListView\n"
 "{\n"
 "  background-color: transparent;\n"
@@ -342,6 +428,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.durationLabel.setText(_translate("MainWindow", "0.00 / 0.00"))
         self.refreshButton.setText(_translate("MainWindow", "Refresh"))
+        self.closeButton.setText(_translate("MainWindow", "✕"))
+        self.minimizeButton.setText(_translate("MainWindow", "🗕"))
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap, QIcon, QImage, QFont, QColor
 from playerUI import Ui_MainWindow
 from loginUI import Ui_login
 import captchaUI
-from PyQt5.QtCore import QUrl, QTimer, Qt
+from PyQt5.QtCore import QUrl, QTimer, Qt, QPoint
 import vk_api
 from vk_api import audio
 import time
@@ -23,11 +23,11 @@ def suppress_qt_warnings():
     os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"
     os.environ["QT_SCALE_FACTOR"] = "1"
 
-
 # MAIN WINDOW ----------------------------------------------------------------------------------------------------------
 class PlayerWindow(QMainWindow):
     def __init__(self):
         super(PlayerWindow, self).__init__()
+
         # Setup main window
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -35,8 +35,9 @@ class PlayerWindow(QMainWindow):
         self.setWindowTitle(name_window)
         self.setWindowIcon(QIcon('player.ico'))
 
-        # Setup music elements Nr.1
+        # Setup elements Nr.1
         self.first = True
+        self.login_show = True
         self.offline = False
         self.offline_mode = False
         self.volume = 50
@@ -44,8 +45,6 @@ class PlayerWindow(QMainWindow):
         self.artists = []
         self.covers = []
         self.urls = []
-        self.errors = {}
-        self.errors["Error"] = []
         self.shuffle = False
         self.repeatthis = False
         self.repeatonce = False
@@ -59,7 +58,7 @@ class PlayerWindow(QMainWindow):
         self.settings_read()
         self.checkCover()
 
-        # Setup music elements Nr.2
+        # Setup elements Nr.2
         self.isPlaying = False
         self.ui.musicSlider.setPageStep(0)
         self.valueSlider = 0
@@ -94,6 +93,8 @@ class PlayerWindow(QMainWindow):
         self.ui.volumeButton.clicked.connect(self.mute)
         self.ui.offlineButton.clicked.connect(self.set_offline_mode)
         self.ui.aboutButton.clicked.connect(self.aboutButton)
+        self.ui.closeButton.clicked.connect(self.closeButton_clicked)
+        self.ui.minimizeButton.clicked.connect(self.minimizeButton_clicked)
 
         # Music slider bar connect
         self.ui.musicSlider.sliderReleased.connect(self.sliderValue)
@@ -108,6 +109,7 @@ class PlayerWindow(QMainWindow):
         self.timer.timeout.connect(self.time_hit)
         self.timer.start(int(1000 / 60))
 
+        # Get text from current item
         try:
             self.text_item = self.ui.listWidget.currentItem().text()
         except Exception as e:
@@ -122,18 +124,48 @@ class PlayerWindow(QMainWindow):
             self.offline_mode = False
             self.checkstylebuttons()
 
+        # Set color if exist first song
         if first_song:
             self.ui.listWidget.currentItem().setFont(QFont("Segoe UI", 11, QFont.Bold))
             self.text_item = self.ui.listWidget.currentItem().text()
             self.ui.listWidget.currentItem().setText("❯ " + self.text_item)
 
+        self.start = QPoint(0, 0)
+        self.pressing = False
+
+
+    # Check mouse press event
+    def mousePressEvent(self, event):
+        self.start = self.mapToGlobal(event.pos())
+        self.pressing = True
+
+    # Drag app
+    def mouseMoveEvent(self, event):
+        if self.pressing and (self.ui.titleBarLabel.underMouse() or self.ui.titleBarInfoLabel.underMouse()):
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end - self.start
+            self.setGeometry(self.mapToGlobal(self.movement).x(),
+                                    self.mapToGlobal(self.movement).y(),
+                                    self.width(),
+                                    self.height())
+            self.start = self.end
+
+    # Minimize App
+    def minimizeButton_clicked(self):
+        self.showMinimized()
+
+    # Close App
+    def closeButton_clicked(self):
+        self.close()
+
+    # Function for About button
     def aboutButton(self):
         try:
             self.msg_about = QMessageBox()
             self.msg_about.setWindowTitle("About")
             self.msg_about.setWindowIcon(QIcon("img/about.ico"))
             self.msg_about.setText("VK Player<br>"
-                                   "Version: 3.7<br>"
+                                   "Version: 4.0<br>"
                                    "Developer: Daniel Zavorot (dani3lz)<br>"
                                    "Github: <a href='https://github.com/dani3lz/VK_Player'>https://github.com/dani3lz/VK_Player</a>")
             self.msg_about.show()
@@ -141,6 +173,7 @@ class PlayerWindow(QMainWindow):
         except Exception as e:
             print(e)
 
+    # Message box with question (offline mode)
     def offline_question(self):
         qm = QMessageBox()
         answer = qm.question(self, "Download" ,"This function may take a long time, please don't close the application. "
@@ -151,6 +184,7 @@ class PlayerWindow(QMainWindow):
         else:
             return False
 
+    # Check if the music player is offline
     def check_offline(self):
         self.isPlaying = False
         self.checkStyle()
@@ -159,6 +193,7 @@ class PlayerWindow(QMainWindow):
         else:
             self.offline = True
 
+    # Read all downloaded songs
     def read_songs(self):
         try:
             self.ui.listWidget.clear()
@@ -194,12 +229,16 @@ class PlayerWindow(QMainWindow):
             else:
                 self.mode = "Normal"
                 self.playlist.setPlaybackMode(3)
+            self.offline_mode = True
         except Exception as e:
             print(e)
 
+    # Switch offline or online mode
     def set_offline_mode(self):
         self.check_offline()
         if not self.offline:
+            self.player.pause()
+            self.isPlaying = False
             answer = self.offline_question()
             if answer:
                 self.download_songs()
@@ -209,20 +248,21 @@ class PlayerWindow(QMainWindow):
                 self.ui.listWidget.currentItem().setFont(QFont("Segoe UI", 11, QFont.Bold))
                 self.text_item = self.ui.listWidget.currentItem().text()
                 self.ui.listWidget.currentItem().setText("❯ " + self.text_item)
-                self.offline_mode = True
             else:
                 self.changeMode = True
                 self.readSongs()
                 self.ui.listWidget.currentItem().setFont(QFont("Segoe UI", 11, QFont.Bold))
                 self.text_item = self.ui.listWidget.currentItem().text()
                 self.ui.listWidget.currentItem().setText("❯ " + self.text_item)
-                self.offline_mode = False
             self.checkstylebuttons()
 
+    # Function for downloading all songs
     def download_songs(self):
-        self.setWindowTitle(name_window + " | Downloading... 0%")
-        self.setEnabled(False)
         self.timer.stop()
+        self.setWindowTitle(name_window + " | Downloading... 0%")
+        self.ui.titleBarInfoLabel.setText("Downloading... 0%")
+        self.setEnabled(False)
+        QApplication.processEvents()
         os.makedirs('songs')
         os.chdir('songs')
         th = []
@@ -249,14 +289,16 @@ class PlayerWindow(QMainWindow):
                     ts.join()
                 th.clear()
                 list_len = False
-            QApplication.processEvents()
             percent = round((nrr / size) * 100)
             self.setWindowTitle(name_window + " | Downloading... " + str(percent) + "%")
+            self.ui.titleBarInfoLabel.setText("Downloading... " + str(percent) + "%")
+            QApplication.processEvents()
             self.setEnabled(False)
         time_finish = time.time()
         os.chdir("../")
         self.setEnabled(True)
         self.setWindowTitle(name_window)
+        self.ui.titleBarInfoLabel.setText("")
         self.timer.start()
         timefinal = time_finish - time_start
         self.msg_download = QMessageBox()
@@ -267,6 +309,7 @@ class PlayerWindow(QMainWindow):
         self.msg_download.show()
         self.msg_download.raise_()
 
+    # Download song for offline mode
     def downloading(self, nr):
         try:
             doc = requests.get(self.urls[nr])
@@ -281,6 +324,7 @@ class PlayerWindow(QMainWindow):
         except Exception as e:
             print(e)
 
+    # Mute - function for volume
     def mute(self):
         if self.volume > 0:
             self.lastVolume = self.volume
@@ -358,6 +402,7 @@ class PlayerWindow(QMainWindow):
         except Exception as e:
             print(e)
 
+    # Check player mode
     def checkMode(self):
         if self.mode == "Shuffle":
             self.shuffleMode()
@@ -388,10 +433,12 @@ class PlayerWindow(QMainWindow):
     def time_hit(self):
         if self.first:
             self.ui.offlineButton.setVisible(False)
-            logwin.show()
+            if self.login_show:
+                logwin.show()
+                self.login_show = False
 
-        if self.first and not self.isVisible():
-            logwin.close()
+        if self.first and not logwin.isVisible():
+            self.close()
             cpwin.close()
 
         if not self.isEnabled() and not logwin.isVisible():
@@ -431,6 +478,8 @@ class PlayerWindow(QMainWindow):
                                                      "background-repeat: none;")
                     self.player.stop()
         self.settings_write()
+
+    # Check cover image
     def checkCover(self):
         try:
             if self.covers[self.currentIndex] == "no_image.jpg":
@@ -464,11 +513,8 @@ class PlayerWindow(QMainWindow):
                 self.currentIndex = self.newIndex
                 self.row = self.newIndex
                 self.checkCover()
-
-
         except Exception as e:
             print(e)
-
 
     # Read file with songs
     def readSongs(self):
@@ -477,6 +523,7 @@ class PlayerWindow(QMainWindow):
         self.titles.clear()
         self.covers.clear()
         self.setWindowTitle(name_window)
+        self.ui.titleBarInfoLabel.setText("")
         self.player = QMediaPlayer()
         self.playlist = QMediaPlaylist(self.player)
         try:
@@ -529,11 +576,15 @@ class PlayerWindow(QMainWindow):
                     self.ui.listWidget.setCurrentRow(0)
                     self.first = False
                     self.ui.offlineButton.setVisible(True)
-
-
+            self.offline_mode = False
+            try:
+                self.checkstylebuttons()
+            except Exception as e:
+                print(e)
         except Exception as e:
             print(e)
             self.first = True
+            self.login_show = True
             self.setEnabled(False)
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Advertisement")
@@ -545,9 +596,6 @@ class PlayerWindow(QMainWindow):
                     "<a href='https://regvk.com/id/'>https://regvk.com/id/</a>")
             self.msg.show()
             self.msg.raise_()
-
-
-
 
     # Play button
     def play(self):
@@ -629,44 +677,6 @@ class PlayerWindow(QMainWindow):
             self.checkstylebuttons()
 
     def checkstylebuttons(self):
-        '''if self.offline_mode:
-            self.ui.offlineButton.setStyleSheet("QPushButton\n"
-                                             "{\n"
-                                             "    background-color: #1DB954;\n"
-                                             "    color: #fff;\n"
-                                             "    font-size: 11px;\n"
-                                             "    font-weight: bold;\n"
-                                             "    border: none;\n"
-                                             "    border-radius: 25px;\n"
-                                             "    padding: 5px;\n"
-                                             "}\n"
-                                             "QPushButton::disabled\n"
-                                             "{\n"
-                                             "    background-color: #5c5c5c;\n"
-                                             "}\n"
-                                             "QPushButton::pressed\n"
-                                             "{\n"
-                                             "    background-color: #26F36E;\n"
-                                             "}")
-        else:
-            self.ui.offlineButton.setStyleSheet("QPushButton\n"
-                                                "{\n"
-                                                "    background-color: #ff3333;\n"
-                                                "    color: #fff;\n"
-                                                "    font-size: 11px;\n"
-                                                "    font-weight: bold;\n"
-                                                "    border: none;\n"
-                                                "    border-radius: 25px;\n"
-                                                "    padding: 5px;\n"
-                                                "}\n"
-                                                "QPushButton::disabled\n"
-                                                "{\n"
-                                                "    background-color: #5c5c5c;\n"
-                                                "}\n"
-                                                "QPushButton::pressed\n"
-                                                "{\n"
-                                                "    background-color: #ff4747;\n"
-                                                "}")'''
         if self.shuffle:
             self.ui.shuffleButton.setStyleSheet("background-color: transparent;\n"
                                              "border-image: url(img/shuffle_on.png);\n"
@@ -1031,6 +1041,9 @@ class GetAudioVK():
                 os.remove("vk_config.v2.json")
             except Exception as e:
                 pass
+            window.timer.stop()
+            window.ui.titleBarInfoLabel.setText("Processing...")
+            QApplication.processEvents()
             window.setWindowTitle( name_window + " | Processing...")
             logwin.close()
             self.download_refresh(my_id)
@@ -1065,7 +1078,6 @@ class GetAudioVK():
     def download_refresh(self, my_id):
         vk_audio = audio.VkAudio(self.vk_session)
         time_start = time.time()
-        window.timer.stop()
         self.songs_list = {}
         self.songs_list["Songs"] = []
         self.list_audio = vk_audio.get(owner_id=my_id)
@@ -1106,9 +1118,10 @@ class GetAudioVK():
                     ts.join()
                 th.clear()
                 list_len = False
-            QApplication.processEvents()
             percent = round((nrr / size) * 100)
             window.setWindowTitle(name_window + " | Updating... " + str(percent) + "%")
+            window.ui.titleBarInfoLabel.setText("Updating... " + str(percent) + "%")
+            QApplication.processEvents()
             window.setEnabled(False)
         os.chdir("../")
 
@@ -1127,7 +1140,11 @@ class GetAudioVK():
         self.msg_succes.setText("All songs was downloaded in " + str(round(timefinal)) + " seconds.")
         self.msg_succes.show()
         self.msg_succes.raise_()
+        window.first = True
         window.readSongs()
+        window.ui.listWidget.currentItem().setFont(QFont("Segoe UI", 11, QFont.Bold))
+        window.text_item = window.ui.listWidget.currentItem().text()
+        window.ui.listWidget.currentItem().setText("❯ " + window.text_item)
 
     def write_list(self, nr):
         id_song = nr
