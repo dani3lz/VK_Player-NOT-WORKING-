@@ -32,6 +32,6 @@ Example 1 | Example 2
 Logging on to VK.com is also done in **VK Player**. The user must enter the login, password and VK ID (VK ID must contain only digits). If the user has two factor authentication, then a new window will appear where you will have to enter the code. 
 A new image captcha window will also appear if requested by VK.com. And last but not least, if the user enters the wrong data, then he will be informed below the "Login" button.
 
-![Login](https://i.imgur.com/ITV63Hd.png)
+![Login](https://i.imgur.com/R9eUQ5F.png)
 
 **VK Player** by dani3lz (c)

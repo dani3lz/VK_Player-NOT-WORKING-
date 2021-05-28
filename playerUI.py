@@ -304,7 +304,7 @@ class Ui_MainWindow(object):
 "QListView::disabled\n"
 "{\n"
 "   background-color: transpent;\n"
-"   color: #1b1b1b;\n"
+"   color: #fff;\n"
 "    border: none;\n"
 "}\n"
 "QListView::item\n"
