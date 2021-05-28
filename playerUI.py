@@ -226,7 +226,7 @@ class Ui_MainWindow(object):
         self.imgLabel.setText("")
         self.imgLabel.setObjectName("imgLabel")
         self.refreshButton = QtWidgets.QPushButton(self.groupBox)
-        self.refreshButton.setGeometry(QtCore.QRect(20, 595, 81, 31))
+        self.refreshButton.setGeometry(QtCore.QRect(20, 595, 74, 31))
         self.refreshButton.setStyleSheet("QPushButton\n"
 "{\n"
 "    background-color: #ff3333;\n"
@@ -258,37 +258,17 @@ class Ui_MainWindow(object):
 #-----------------------
 
         self.offlineButton = QtWidgets.QPushButton(self.groupBox)
-        self.offlineButton.setGeometry(QtCore.QRect(111, 595, 81, 31))
-        self.offlineButton.setStyleSheet("QPushButton\n"
-                                         "{\n"
-                                         "    background-color: #ff3333;\n"
-                                         "    color: #fff;\n"
-                                         "    font-size: 11px;\n"
-                                         "    font-weight: bold;\n"
-                                         "    border: none;\n"
-                                         "    border-radius: 25px;\n"
-                                         "    padding: 5px;\n"
-                                         "\n"
-                                         "}\n"
-                                         "\n"
-                                         "\n"
-                                         "QPushButton::disabled\n"
-                                         "{\n"
-                                         "    background-color: #5c5c5c;\n"
-                                         "\n"
-                                         "}\n"
-                                         "\n"
-                                         "\n"
-                                         "QPushButton::pressed\n"
-                                         "{\n"
-                                         "    background-color: #ff4747;\n"
-                                         "\n"
-                                         "}\n"
-                                         "")
+        self.offlineButton.setGeometry(QtCore.QRect(112, 370, 43, 31))
+        self.offlineButton.setStyleSheet("background-color: transparent;\n"
+                                         "border-image: url(img/offline_off.png);\n"
+                                         "background: none;\n"
+                                         "border: none;\n"
+                                         "background-repeat: none;")
+        self.offlineButton.setText("")
         self.offlineButton.setObjectName("offlineButton")
 
-        self.aboutButton = QtWidgets.QPushButton(self.groupBox)
-        self.aboutButton.setGeometry(QtCore.QRect(206, 598, 25, 25))
+        self.aboutButton = QtWidgets.QPushButton(self.groupBox_2)
+        self.aboutButton.setGeometry(QtCore.QRect(1025, 6, 20, 20))
         self.aboutButton.setStyleSheet("background-color: transparent;\n"
                                          "border-image: url(img/about.png);\n"
                                          "background: none;\n"
@@ -324,7 +304,7 @@ class Ui_MainWindow(object):
 "QListView::disabled\n"
 "{\n"
 "   background-color: transpent;\n"
-"    color: #1b1b1b;\n"
+"   color: #1b1b1b;\n"
 "    border: none;\n"
 "}\n"
 "QListView::item\n"
@@ -332,27 +312,14 @@ class Ui_MainWindow(object):
 "    background-color: transparent;\n"
 "    padding: 5px;\n"
 "}\n"
-"QListView::item:selected\n"
-"{\n"
-"   background-color: rgb(57, 57, 57);\n"
-"   border: 1px solid rgb(57, 57, 57);\n"
-"    color: #fff;\n"
-"}\n"
 "QListView::item:selected:!active\n"
 "{\n"
-"    background-color: #696969;\n"
-"    border: none;\n"
-"  color: #fff;\n"
+"  color: #1DB954;\n"
 "}\n"
-"\n"
-"QListView::item:selected:active \n"
+"QListView::item:selected\n"
 "{\n"
-"   background-color: #696969;\n"
-"    border: 1px solid #696969;\n"
-"   color: #fff;\n"
-"\n"
+"  color: #1DB954;\n"
 "}\n"
-"\n"
 "QListView::item:hover {\n"
 "    background-color: transparent;\n"
 "   border: none;\n"
@@ -375,7 +342,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.durationLabel.setText(_translate("MainWindow", "0.00 / 0.00"))
         self.refreshButton.setText(_translate("MainWindow", "Refresh"))
-        self.offlineButton.setText(_translate("MainWindow", "Offline"))
 
 
 if __name__ == "__main__":
