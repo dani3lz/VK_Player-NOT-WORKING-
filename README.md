@@ -17,9 +17,9 @@ PyQt5 may also be embedded in C++ based applications to allow users of those app
 **VK Player** at the moment can read your music from your VK page and write information about songs in json file. Also VK Player can download all your music in new folder. The offline function will also be available after this process.
 
 But first of all let's not forget that this application is a music player, therefore VK Player has functions like:
-- shuffle
-- repeat this
-- repeat once. 
+- Shuffle
+- Repeat this
+- Repeat once. 
 
 In addition, this player contains a volume slider and a song progress slider.
 It also has a list of all the songs from your VK profile and also if the song has a cover, then it is illustrated next to the list of songs, otherwise, a default image is illustrated which is taken from the "img" folder.
