@@ -38,4 +38,6 @@ A new image captcha window will also appear if requested by VK.com. And last but
 
 ![Tray](https://i.imgur.com/cbC6kbc.png)
 
+##
+
 **VK Player** by dani3lz (c)
