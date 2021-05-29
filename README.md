@@ -1,5 +1,5 @@
 # VK Player
-[![Icon](https://i.imgur.com/GGSlTqE.png)](https://github.com/dani3lz/VK_Player)
+[![Icon](https://i.imgur.com/f0nokeI.png)](https://github.com/dani3lz/VK_Player)
 
 ## Libraries
 
@@ -24,14 +24,18 @@ But first of all let's not forget that this application is a music player, there
 In addition, this player contains a volume slider and a song progress slider.
 It also has a list of all the songs from your VK profile and also if the song has a cover, then it is illustrated next to the list of songs, otherwise, a default image is illustrated which is taken from the "img" folder.
 
-Example 1 | Example 2
-:-------------------------:|:-------------------------:
-![Offline Mode](https://i.imgur.com/vSfpMYC.png) | ![Online Mode](https://i.imgur.com/G1HCZ2r.png)
+
+![Player](https://i.imgur.com/1csobHT.png) 
 
 ## Login
+
+![Login](https://i.imgur.com/EOtJlLN.png)
+
 Logging on to VK.com is also done in **VK Player**. The user must enter the login, password and VK ID (VK ID must contain only digits). If the user has two factor authentication, then a new window will appear where you will have to enter the code. 
 A new image captcha window will also appear if requested by VK.com. And last but not least, if the user enters the wrong data, then he will be informed below the "Login" button.
 
-![Login](https://i.imgur.com/adTsFKN.png)
+## Tray menu
+
+![Tray](https://i.imgur.com/cbC6kbc.png)
 
 **VK Player** by dani3lz (c)
