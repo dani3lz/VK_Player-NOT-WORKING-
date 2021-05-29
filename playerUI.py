@@ -19,18 +19,25 @@ class Ui_MainWindow(object):
         MainWindow.setStyleSheet("")
         MainWindow.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
 
         self.titleBarLabel = QtWidgets.QLabel(self.centralwidget)
         self.titleBarLabel.setGeometry(QtCore.QRect(0, 0, 963, 30))
+        self.titleBarLabel.setStyleSheet("background: #070707;\n"
+                                      "color: #CDCDCD;")
+        self.titleBarLabel.setText("")
+        self.titleBarLabel.setObjectName("titleBarLabel")
+
+        self.titleBarTitle = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarTitle.setGeometry(QtCore.QRect(88, 0, 875, 30))
+        self.titleBarTitle.setAlignment(QtCore.Qt.AlignCenter)
         font = QtGui.QFont("Impact")
         font.setPointSize(13)
-        self.titleBarLabel.setFont(font)
-        self.titleBarLabel.setStyleSheet("background: #181818;\n"
-                                      "color: #CDCDCD;")
-        self.titleBarLabel.setText("\t\t\t\t\t\t\t\t\tVK Player")
-        self.titleBarLabel.setObjectName("titleBarLabel")
+        self.titleBarTitle.setFont(font)
+        self.titleBarTitle.setStyleSheet("background: transparent;\n"
+                                         "color: #CDCDCD;")
+        self.titleBarTitle.setText("VK Player")
+        self.titleBarTitle.setObjectName("titleBarTitle")
 
         self.titleBarInfoLabel = QtWidgets.QLabel(self.centralwidget)
         self.titleBarInfoLabel.setGeometry(QtCore.QRect(20, 0, 963, 30))
@@ -49,7 +56,7 @@ class Ui_MainWindow(object):
         self.closeButton.setFont(font)
         self.closeButton.setStyleSheet("QPushButton\n"
 "{\n"
-"    background: #1B1B1B;\n"
+"    background: #070707;\n"
 "    color: #cdcdcd;\n"
 "    border-style: solid;\n"
 "    border-width: 1px;\n"
@@ -79,7 +86,7 @@ class Ui_MainWindow(object):
         self.minimizeButton.setFont(font)
         self.minimizeButton.setStyleSheet("QPushButton\n"
 "{\n"
-"    background: #1B1B1B;\n"
+"    background: #070707;\n"
 "    color: #cdcdcd;\n"
 "    border-style: solid;\n"
 "    border-width: 1px;\n"
@@ -89,7 +96,7 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton::hover\n"
 "{\n"
-"    background-color: #202020;\n"
+"    background-color: #0F0F0F;\n"
 "    color: #fff;\n"
 "}\n"
 "\n"
@@ -369,6 +376,7 @@ class Ui_MainWindow(object):
         self.artistLabel.raise_()
         self.imgLabel.raise_()
         self.titleBarLabel.raise_()
+        self.titleBarTitle.raise_()
         self.titleBarInfoLabel.raise_()
         self.refreshButton.raise_()
         self.closeButton.raise_()

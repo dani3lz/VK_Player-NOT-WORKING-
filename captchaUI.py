@@ -14,7 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(360, 303)
+        MainWindow.resize(360, 333)
+        MainWindow.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         MainWindow.setStyleSheet("QWidget\n"
 "{\n"
 "    background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255));\n"
@@ -23,8 +24,61 @@ class Ui_MainWindow(object):
 "")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.titleBarLabel = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarLabel.setGeometry(QtCore.QRect(0, 0, 316, 30))
+        font = QtGui.QFont("Impact")
+        font.setPointSize(13)
+        self.titleBarLabel.setFont(font)
+        self.titleBarLabel.setStyleSheet("background: #070707;\n"
+                                         "color: #CDCDCD;")
+        self.titleBarLabel.setObjectName("titleBarLabel")
+
+        self.titleBarTitle = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarTitle.setGeometry(QtCore.QRect(20, 0, 296, 30))
+        font = QtGui.QFont("Impact")
+        font.setPointSize(13)
+        self.titleBarTitle.setFont(font)
+        self.titleBarTitle.setStyleSheet("background: #070707;\n"
+                                         "color: #CDCDCD;")
+        self.titleBarTitle.setText("")
+        self.titleBarTitle.setObjectName("titleBarTitle")
+
+        self.closeButton = QtWidgets.QPushButton(MainWindow)
+        self.closeButton.setGeometry(QtCore.QRect(316, 0, 44, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.closeButton.setFont(font)
+        self.closeButton.setStyleSheet("QPushButton\n"
+                                       "{\n"
+                                       "    background: #070707;\n"
+                                       "    color: #cdcdcd;\n"
+                                       "    border-style: solid;\n"
+                                       "    border-width: 1px;\n"
+                                       "    border-color: transparent;\n"
+                                       "}\n"
+                                       "\n"
+                                       "QPushButton::hover\n"
+                                       "{\n"
+                                       "    background-color: #E81123;\n"
+                                       "    color: #fff;\n"
+                                       "}\n"
+                                       "\n"
+                                       "\n"
+                                       "QPushButton::pressed\n"
+                                       "{\n"
+                                       "    background-color: #7D0913;\n"
+                                       "    color: #fff;\n"
+                                       "}")
+        self.closeButton.setObjectName("closeButton")
+
+
+
+
+
+
         self.captchaImg = QtWidgets.QLabel(self.centralwidget)
-        self.captchaImg.setGeometry(QtCore.QRect(50, 30, 251, 101))
+        self.captchaImg.setGeometry(QtCore.QRect(50, 60, 251, 101))
         self.captchaImg.setStyleSheet("background: none;\n"
 "border: none;\n"
 "background-repeat: none;\n"
@@ -32,7 +86,7 @@ class Ui_MainWindow(object):
         self.captchaImg.setText("")
         self.captchaImg.setObjectName("captchaImg")
         self.captchaEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.captchaEdit.setGeometry(QtCore.QRect(40, 170, 271, 31))
+        self.captchaEdit.setGeometry(QtCore.QRect(40, 200, 271, 31))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -56,7 +110,7 @@ class Ui_MainWindow(object):
         self.captchaEdit.setText("")
         self.captchaEdit.setObjectName("captchaEdit")
         self.captchaButton = QtWidgets.QPushButton(self.centralwidget)
-        self.captchaButton.setGeometry(QtCore.QRect(100, 220, 151, 41))
+        self.captchaButton.setGeometry(QtCore.QRect(100, 250, 151, 41))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
@@ -92,10 +146,12 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.captchaButton.setText(_translate("MainWindow", "Send"))
+        self.closeButton.setText(_translate("MainWindow", "✕"))
 
 
 if __name__ == "__main__":

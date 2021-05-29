@@ -14,7 +14,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_login(object):
     def setupUi(self, login):
         login.setObjectName("login")
-        login.resize(513, 483)
+        login.resize(513, 513)
+        login.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         login.setStyleSheet("QWidget\n"
 "{\n"
 "    background: qlineargradient(spread:pad, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 65, 65, 255), stop:1 rgba(0, 0, 0, 255));\n"
@@ -23,8 +24,48 @@ class Ui_login(object):
 "")
         self.centralwidget = QtWidgets.QWidget(login)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.titleBarLabel = QtWidgets.QLabel(self.centralwidget)
+        self.titleBarLabel.setGeometry(QtCore.QRect(0, 0, 469, 30))
+        font = QtGui.QFont("Impact")
+        font.setPointSize(13)
+        self.titleBarLabel.setFont(font)
+        self.titleBarLabel.setStyleSheet("background: #070707;\n"
+                                         "color: #CDCDCD;")
+        self.titleBarLabel.setObjectName("titleBarLabel")
+
+        self.closeButton = QtWidgets.QPushButton(login)
+        self.closeButton.setGeometry(QtCore.QRect(469, 0, 44, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.closeButton.setFont(font)
+        self.closeButton.setStyleSheet("QPushButton\n"
+                                       "{\n"
+                                       "    background: #070707;\n"
+                                       "    color: #cdcdcd;\n"
+                                       "    border-style: solid;\n"
+                                       "    border-width: 1px;\n"
+                                       "    border-color: transparent;\n"
+                                       "}\n"
+                                       "\n"
+                                       "QPushButton::hover\n"
+                                       "{\n"
+                                       "    background-color: #E81123;\n"
+                                       "    color: #fff;\n"
+                                       "}\n"
+                                       "\n"
+                                       "\n"
+                                       "QPushButton::pressed\n"
+                                       "{\n"
+                                       "    background-color: #7D0913;\n"
+                                       "    color: #fff;\n"
+                                       "}")
+        self.closeButton.setObjectName("closeButton")
+
+
+
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(170, 350, 171, 51))
+        self.pushButton.setGeometry(QtCore.QRect(170, 380, 171, 51))
         font = QtGui.QFont()
         font.setPointSize(18)
         font.setBold(True)
@@ -57,7 +98,7 @@ class Ui_login(object):
 "}")
         self.pushButton.setObjectName("pushButton")
         self.userEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.userEdit.setGeometry(QtCore.QRect(30, 130, 440, 45))
+        self.userEdit.setGeometry(QtCore.QRect(30, 160, 440, 45))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
@@ -81,7 +122,7 @@ class Ui_login(object):
         self.userEdit.setText("")
         self.userEdit.setObjectName("userEdit")
         self.passEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.passEdit.setGeometry(QtCore.QRect(30, 200, 440, 45))
+        self.passEdit.setGeometry(QtCore.QRect(30, 230, 440, 45))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
@@ -105,7 +146,7 @@ class Ui_login(object):
         self.passEdit.setText("")
         self.passEdit.setObjectName("passEdit")
         self.vkidEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.vkidEdit.setGeometry(QtCore.QRect(30, 270, 440, 45))
+        self.vkidEdit.setGeometry(QtCore.QRect(30, 300, 440, 45))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
@@ -130,7 +171,7 @@ class Ui_login(object):
         self.vkidEdit.setPlaceholderText("VK ID (only numbers)")
         self.vkidEdit.setObjectName("vkidEdit")
         self.errorLabel = QtWidgets.QLabel(self.centralwidget)
-        self.errorLabel.setGeometry(QtCore.QRect(20, 420, 481, 51))
+        self.errorLabel.setGeometry(QtCore.QRect(20, 450, 481, 51))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.errorLabel.setFont(font)
@@ -139,7 +180,7 @@ class Ui_login(object):
         self.errorLabel.setText("")
         self.errorLabel.setObjectName("errorLabel")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(0, 0, 531, 91))
+        self.groupBox.setGeometry(QtCore.QRect(0, 30, 531, 91))
         self.groupBox.setStyleSheet("border: none; background: rgb(24, 24 ,24);")
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
@@ -155,6 +196,8 @@ class Ui_login(object):
 "background: transparent;\n"
 "")
         self.label.setObjectName("label")
+        self.titleBarLabel.raise_()
+        self.closeButton.raise_()
         self.groupBox.raise_()
         self.pushButton.raise_()
         self.userEdit.raise_()
@@ -168,7 +211,8 @@ class Ui_login(object):
 
     def retranslateUi(self, login):
         _translate = QtCore.QCoreApplication.translate
-        login.setWindowTitle(_translate("login", "login"))
+        login.setWindowTitle(_translate("login", "Login"))
+        self.closeButton.setText(_translate("MainWindow", "✕"))
         self.pushButton.setText(_translate("login", "Login"))
         self.userEdit.setPlaceholderText(_translate("login", "Username"))
         self.passEdit.setPlaceholderText(_translate("login", "Password"))

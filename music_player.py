@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QMessageBox, QSystemTrayIcon, QAction, qApp, QMenu
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
-from PyQt5.QtGui import QPixmap, QIcon, QImage, QFont, QColor
+from PyQt5.QtGui import QPixmap, QIcon, QImage, QFont, QColor, QDesktopServices
 from playerUI import Ui_MainWindow
 from loginUI import Ui_login
 import captchaUI
@@ -33,7 +33,7 @@ class PlayerWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setFixedSize(self.width(), self.height())
         self.setWindowTitle(name_window)
-        self.setWindowIcon(QIcon('player.ico'))
+        self.setWindowIcon(QIcon('vk_player.ico'))
 
         # Setup elements Nr.1
         self.first = True
@@ -133,6 +133,68 @@ class PlayerWindow(QMainWindow):
         self.start = QPoint(0, 0)
         self.pressing = False
 
+        # Tray menu
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(QIcon("vk_player.ico"))
+
+        show_action = QAction(QIcon("vk_player.ico"), "VK Player", self)
+        github_action = QAction("Github", self)
+        about_action = QAction("About", self)
+        exit_action = QAction("Exit", self)
+        show_action.triggered.connect(self.open_tray_button)
+        github_action.triggered.connect(self.open_github)
+        about_action.triggered.connect(self.aboutButton)
+        exit_action.triggered.connect(qApp.quit)
+
+        tray_menu = QMenu()
+        tray_menu.setStyleSheet("QMenu{\n"
+                                    "background-color: #181818;\n"
+                                    "color: #EAE9E9;}\n"
+                                    "QMenu::item{\n"
+                                    "}\n"
+                                "\n"
+                                "QMenu::item:selected{\n"
+                                    "background: #252525;}\n"
+                                "\n"
+                                "QMenu::separator{\n"
+                                    "height: 10px;\n"
+                                    "margin-left: 10px;\n"
+                                    "margin-right: 5px;}")
+        tray_menu.addAction(show_action)
+        tray_menu.addSeparator()
+        tray_menu.addAction(github_action)
+        tray_menu.addAction(about_action)
+        tray_menu.addSeparator()
+        tray_menu.addAction(exit_action)
+
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.activated.connect(self.systemIcon)
+        self.tray_icon.show()
+
+    # Tray menu
+    def open_tray_button(self):
+        if not self.isVisible():
+            self.show()
+        else:
+            self.activateWindow()
+
+    def open_github(self):
+        try:
+            url = QUrl("https://github.com/dani3lz/VK_Player")
+            QDesktopServices.openUrl(url)
+        except Exception as e:
+            print(e)
+
+    def systemIcon(self, reason):
+        if reason == QSystemTrayIcon.Trigger:
+            if self.windowState() == Qt.WindowMinimized:
+                self.setWindowState(Qt.WindowNoState)
+            else:
+                if not self.isVisible():
+                    self.show()
+                else:
+                    self.activateWindow()
+
 
     # Check mouse press event
     def mousePressEvent(self, event):
@@ -141,7 +203,7 @@ class PlayerWindow(QMainWindow):
 
     # Drag app
     def mouseMoveEvent(self, event):
-        if self.pressing and (self.ui.titleBarLabel.underMouse() or self.ui.titleBarInfoLabel.underMouse()):
+        if self.pressing and (self.ui.titleBarLabel.underMouse() or self.ui.titleBarInfoLabel.underMouse() or self.ui.titleBarTitle.underMouse()):
             self.end = self.mapToGlobal(event.pos())
             self.movement = self.end - self.start
             self.setGeometry(self.mapToGlobal(self.movement).x(),
@@ -156,20 +218,25 @@ class PlayerWindow(QMainWindow):
 
     # Close App
     def closeButton_clicked(self):
-        self.close()
+        self.hide()
+
+    # Close event in minimized status
+    def closeEvent(self, event):
+        event.ignore()
+        self.hide()
 
     # Function for About button
     def aboutButton(self):
         try:
+            self.show()
             self.msg_about = QMessageBox()
             self.msg_about.setWindowTitle("About")
             self.msg_about.setWindowIcon(QIcon("img/about.ico"))
             self.msg_about.setText("VK Player<br>"
-                                   "Version: 4.0<br>"
+                                   "Version: 4.2<br>"
                                    "Developer: Daniel Zavorot (dani3lz)<br>"
                                    "Github: <a href='https://github.com/dani3lz/VK_Player'>https://github.com/dani3lz/VK_Player</a>")
             self.msg_about.show()
-            self.msg_about.raise_()
         except Exception as e:
             print(e)
 
@@ -929,16 +996,31 @@ class LoginWindow(QMainWindow):
 
         # Connect button
         self.ui.pushButton.clicked.connect(self.button_login)
+        self.ui.closeButton.clicked.connect(self.closeButton_clicked)
 
-        # Setup timer
-        self.timerlog = QTimer(self)
-        self.timerlog.timeout.connect(self.time_hit_log)
-        self.timerlog.start(int(1000 / 60))
+        self.start = QPoint(0, 0)
+        self.pressing = False
 
-    # Timer
-    def time_hit_log(self):
-        if not window.isVisible():
-            self.close()
+
+    # Check mouse press event
+    def mousePressEvent(self, event):
+        self.start = self.mapToGlobal(event.pos())
+        self.pressing = True
+
+    # Drag app
+    def mouseMoveEvent(self, event):
+        if self.pressing and self.ui.titleBarLabel.underMouse():
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end - self.start
+            self.setGeometry(self.mapToGlobal(self.movement).x(),
+                             self.mapToGlobal(self.movement).y(),
+                             self.width(),
+                             self.height())
+            self.start = self.end
+
+    # Close App
+    def closeButton_clicked(self):
+        self.close()
 
     # Login button
     def button_login(self):
@@ -973,6 +1055,33 @@ class CaptchaWindow(QMainWindow):
 
         # Connect button
         self.ui.captchaButton.clicked.connect(self.verify)
+        self.ui.closeButton.clicked.connect(self.closeButton_clicked)
+
+        self.start = QPoint(0, 0)
+        self.pressing = False
+
+        # Check mouse press event
+
+    def mousePressEvent(self, event):
+        self.start = self.mapToGlobal(event.pos())
+        self.pressing = True
+
+        # Drag app
+
+    def mouseMoveEvent(self, event):
+        if self.pressing and (self.ui.titleBarLabel.underMouse() or self.ui.titleBarTitle.underMouse()):
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end - self.start
+            self.setGeometry(self.mapToGlobal(self.movement).x(),
+                             self.mapToGlobal(self.movement).y(),
+                             self.width(),
+                             self.height())
+            self.start = self.end
+
+        # Close App
+
+    def closeButton_clicked(self):
+        self.close()
 
     # Type
     def checkType(self, type, username, password, my_id):
@@ -981,13 +1090,13 @@ class CaptchaWindow(QMainWindow):
             self.setFixedSize(self.width(), self.originalHeight)
             self.ui.captchaEdit.setGeometry(self.originalEdit)
             self.ui.captchaButton.setGeometry(self.originalButton)
-            self.setWindowTitle("Captcha")
+            self.ui.titleBarTitle.setText("Captcha")
         elif type == "two":
             self.cpEx = False
             self.setFixedSize(self.width(), 144)
             self.ui.captchaEdit.setGeometry(40, 30, 271, 31)
             self.ui.captchaButton.setGeometry(100, 80, 151, 41)
-            self.setWindowTitle("Two factor authentication")
+            self.ui.titleBarTitle.setText("Two factor authentication")
 
         self.login = username
         self.passw = password
@@ -1177,7 +1286,6 @@ class GetAudioVK():
         except Exception as e:
             print(e)
 # ----------------------------------------------------------------------------------------------------------------------
-
 
 if __name__ == "__main__":
     suppress_qt_warnings()
